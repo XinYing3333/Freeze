@@ -8,6 +8,8 @@ public class EnemySpawner : MonoBehaviour
     public Transform[] spawnPoints; // 敌人生成位置的数组
     public List<Wave> waves; // 存储波次的列表
     public float waveInterval = 10f; // 每波之间的时间间隔
+
+    public Transform target;
     
     private int _currentWaveIndex = 0;
     private bool spawningWave = false;
@@ -59,6 +61,11 @@ public class EnemySpawner : MonoBehaviour
     {
         int spawnIndex = Random.Range(0, spawnPoints.Length);
         Transform spawnPoint = spawnPoints[spawnIndex];
-        Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+        GameObject enemy = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+        EnemyCtrl enemyCtrl = enemy.GetComponent<EnemyCtrl>();
+        if (enemyCtrl != null)
+        {
+            enemyCtrl.SetTarget(target); // 设置敌人的目标
+        }
     }
 }
