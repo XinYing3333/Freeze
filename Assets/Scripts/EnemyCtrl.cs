@@ -101,17 +101,6 @@ public class EnemyCtrl : MonoBehaviour
         }
     }
 
-    private void OnCollisionStay(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            if (target != null)
-            {
-                _navMeshAgent.SetDestination(randomTarget);
-            }
-        }
-    }
-
     private Vector3 GenerateRandomTarget(Vector3 center, float range)
     {
         Vector3 randomPos = center + Random.insideUnitSphere * range;

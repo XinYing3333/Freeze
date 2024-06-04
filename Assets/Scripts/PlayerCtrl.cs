@@ -5,25 +5,29 @@ using UnityEngine.InputSystem;
 
 public class PlayerCtrl : MonoBehaviour
 {
-    [SerializeField] float movementSpeed = 5.0f;
+    [SerializeField] float movementSpeed = 3.0f;
     [SerializeField] float turnSpeed = 10f;
 
     [Header("Input Settings")]
     public PlayerInput playerInput;
+    public Animator anim;
+
     private InputAction _movement;
+    private InputAction _run;
+    private bool _isMove;
+    private bool _isRun;
     private Vector3 _rawInputMovement;
     private InputAction _look;
     private Vector3 _rawInputLook;
 
-    private Animator _anim;
     private Rigidbody _rb;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        _anim = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
         _movement = playerInput.actions.FindAction("Movement");
+        _run = playerInput.actions.FindAction("Run");
         _look = playerInput.actions.FindAction("Look");
     }
 
@@ -31,17 +35,31 @@ public class PlayerCtrl : MonoBehaviour
     {
         OnMovement();
         OnLook();
+        SwitchAnim();
     }
 
     void FixedUpdate()
     {
-        Move();
+        RotateMove();
     }
 
     public void OnMovement()
     {
         Vector2 inputMovement = _movement.ReadValue<Vector2>();
         _rawInputMovement = new Vector3(inputMovement.x, 0, inputMovement.y);
+        _isMove = _rawInputMovement.sqrMagnitude > 0.01f;
+
+        float run = _run.ReadValue<float>();
+        if (run > 0)
+        {
+            movementSpeed = 5.0f;
+            _isRun = true;
+        }
+        else
+        {
+            movementSpeed = 3.0f;
+            _isRun = false;
+        }
     }
 
     public void OnLook()
@@ -62,7 +80,7 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
 
-    private void Move()
+    private void RotateMove()
     {
         if (_rawInputMovement == Vector3.zero)
             return;
@@ -72,5 +90,21 @@ public class PlayerCtrl : MonoBehaviour
 
         Quaternion targetRotation = Quaternion.LookRotation(_rawInputMovement, Vector3.up);
         _rb.rotation = Quaternion.Slerp(_rb.rotation, targetRotation, turnSpeed * Time.deltaTime);
+    }
+
+    private void SwitchAnim()
+    {
+        if (!_isMove)
+        {
+            anim.Play("Happy Idle");
+        }
+        else if (_isRun)
+        {
+            anim.Play("running");
+        }
+        else
+        {
+            anim.Play("moving");
+        }
     }
 }

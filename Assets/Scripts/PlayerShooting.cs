@@ -9,22 +9,23 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform bulletSpawnPoint;
     [SerializeField] private float bulletSpeed = 20f;
+    [SerializeField] private float bulletInterval = 0.1f;
     [SerializeField] private bool startShoot;
     [SerializeField] private bool isShooting;
 
-    private PlayerInput playerInput;
-    private InputAction shootAction;
+    private PlayerInput _playerInput;
+    private InputAction _shootAction;
 
     void Start()
     {
-        playerInput = GetComponent<PlayerInput>();
-        shootAction = playerInput.actions["Shoot"];
+        _playerInput = GetComponent<PlayerInput>();
+        _shootAction = _playerInput.actions["Shoot"];
         startShoot = false;
     }
 
     void Update()
     {
-        float shoot = shootAction.ReadValue<float>();
+        float shoot = _shootAction.ReadValue<float>();
         
         if (shoot > 0)
         {
@@ -53,7 +54,7 @@ public class PlayerShooting : MonoBehaviour
             }
 
             isShooting = true;
-            yield return new WaitForSeconds(0.15f);//射擊間隔
+            yield return new WaitForSeconds(bulletInterval);//射擊間隔
             isShooting = false;
 
         }
