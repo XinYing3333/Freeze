@@ -5,6 +5,7 @@ using UnityEngine;
 public class IceCreamCar : MonoBehaviour
 {
     public Transform canvasTranform;
+    public Transform aimPoint;
         
         
     void Start()
@@ -15,6 +16,6 @@ public class IceCreamCar : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        canvasTranform.LookAt(transform.position + Camera.main.transform.forward);
+        canvasTranform.LookAt(transform.position + aimPoint.transform.forward);
     }
 }
