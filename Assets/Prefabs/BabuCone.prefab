@@ -26,13 +26,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6287098429414610007}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.000000059604623, y: 0.7071068, z: -0.00000005284708, w: 0.70710677}
   m_LocalPosition: {x: 0.65456176, y: 0.30411988, z: -0.3374153}
   m_LocalScale: {x: 0.083950385, y: 0.09704483, z: 0.39959607}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4569393540846109672}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &5887962360631891679
 MeshFilter:
@@ -92,10 +92,18 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6287098429414610007}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2, y: 2, z: 2}
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7561782151222777575
 GameObject:
@@ -120,6 +128,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7561782151222777575}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.50218105, y: -0.5031116, z: 0.48669165, w: 0.50776386}
   m_LocalPosition: {x: -0.4674038, y: -0.5958873, z: 0.2946759}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -127,13 +136,13 @@ Transform:
   m_Children:
   - {fileID: 8885041597418740032}
   m_Father: {fileID: 1223199654137012318}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6216325058900372252
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: aff57f07a52ffea41a4a6d2842a38abb, type: 3}
@@ -186,9 +195,18 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: d24e88efbf9debc44a203df24ff3aaab, type: 2}
     - target: {fileID: 919132149155446097, guid: aff57f07a52ffea41a4a6d2842a38abb, type: 3}
       propertyPath: m_Name
-      value: BabuCone
+      value: BabuCone 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 5097370190579632962, guid: aff57f07a52ffea41a4a6d2842a38abb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4569393540846109672}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: aff57f07a52ffea41a4a6d2842a38abb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3515643650293318736}
   m_SourcePrefab: {fileID: 100100000, guid: aff57f07a52ffea41a4a6d2842a38abb, type: 3}
 --- !u!4 &1223199654137012318 stripped
 Transform:
@@ -209,7 +227,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6522825678924060237}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: f231784110181f14bb88d9fc366aba5f, type: 3}
+  m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 03a10efcc7dba614485c40d99cd79495, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -220,3 +238,4 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
