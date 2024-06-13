@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3425803381095750706}
   - component: {fileID: 1623141451057826380}
   - component: {fileID: 3425803381095750705}
-  - component: {fileID: 3425803381095750704}
   - component: {fileID: 3425803381095750711}
   - component: {fileID: -1873110335202838631}
   - component: {fileID: 5917489659162673418}
@@ -53,11 +52,12 @@ MonoBehaviour:
   enemyType:
     enemyName: Zombie01
     enemyHealth: 100
-    enemyAttack: 10
+    enemyAttack: 1
     enemyAttackSpeed: 1
   target: {fileID: 0}
   healthBar: {fileID: 0}
   bulletAttack: 0
+  anim: {fileID: 8241340365751687656}
 --- !u!33 &3425803381095750705
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -66,48 +66,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3425803381095750709}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &3425803381095750704
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3425803381095750709}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: bacbafc8423cea04dae4c7c536ab54e7, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!136 &3425803381095750711
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -184,6 +142,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3425803381095750706}
     m_Modifications:
+    - target: {fileID: 3715549807150000240, guid: 8f574f77ef1ef8347adb48501fe77722, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7fcbd62f44f1d754992e2d7bd87d5d36, type: 2}
     - target: {fileID: 7068780301906679900, guid: 8f574f77ef1ef8347adb48501fe77722, type: 3}
       propertyPath: m_Name
       value: Zombie1
@@ -228,7 +190,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7765100418221053098, guid: 8f574f77ef1ef8347adb48501fe77722, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -236,5 +199,10 @@ PrefabInstance:
 --- !u!4 &2647891942977454994 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7589280703500337894, guid: 8f574f77ef1ef8347adb48501fe77722, type: 3}
+  m_PrefabInstance: {fileID: 5615347885275545972}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &8241340365751687656 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4589913779447306396, guid: 8f574f77ef1ef8347adb48501fe77722, type: 3}
   m_PrefabInstance: {fileID: 5615347885275545972}
   m_PrefabAsset: {fileID: 0}

@@ -14,11 +14,14 @@ public class PlayerCtrl : MonoBehaviour
 
     private InputAction _movement;
     private InputAction _run;
+
     private bool _isMove;
     private bool _isRun;
     private Vector3 _rawInputMovement;
     private InputAction _look;
     private Vector3 _rawInputLook;
+
+    private int _weaponNum;
 
     private Rigidbody _rb;
 
@@ -91,7 +94,7 @@ public class PlayerCtrl : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(_rawInputMovement, Vector3.up);
         _rb.rotation = Quaternion.Slerp(_rb.rotation, targetRotation, turnSpeed * Time.deltaTime);
     }
-
+    
     private void SwitchAnim()
     {
         if (!_isMove)

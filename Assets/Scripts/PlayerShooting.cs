@@ -13,6 +13,9 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private bool startShoot;
     [SerializeField] private bool isShooting;
 
+    private int _weaponNum;
+    private InputAction _switch;
+    
     private PlayerInput _playerInput;
     private InputAction _shootAction;
 
@@ -20,6 +23,7 @@ public class PlayerShooting : MonoBehaviour
     {
         _playerInput = GetComponent<PlayerInput>();
         _shootAction = _playerInput.actions["Shoot"];
+        _switch = _playerInput.actions["Switch"];
         startShoot = false;
     }
 
@@ -40,6 +44,7 @@ public class PlayerShooting : MonoBehaviour
         {
             StartCoroutine(Shoot());
         }
+        SwitchWeapon();
     }
     
     IEnumerator Shoot()
@@ -57,6 +62,26 @@ public class PlayerShooting : MonoBehaviour
             yield return new WaitForSeconds(bulletInterval);//射擊間隔
             isShooting = false;
 
+        }
+    }
+    
+    private void SwitchWeapon()
+    {
+        float switchWeapon = _switch.ReadValue<float>();
+        if (switchWeapon > 0)
+        {
+            if (_weaponNum == 0)
+            {
+                _weaponNum = 1;
+                Debug.Log("Switch to Weapon 1");
+                bulletInterval = 1f;
+            }
+            else
+            {
+                _weaponNum = 0;
+                Debug.Log("Switch to Weapon 0");
+                bulletInterval = 0.1f;
+            }
         }
     }
 }
