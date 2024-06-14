@@ -21,6 +21,7 @@ public class PlayerCtrl : MonoBehaviour
     private InputAction _look;
     private Vector3 _rawInputLook;
 
+    private PlayerShooting _playerShooting;
     private int _weaponNum;
 
     private Rigidbody _rb;
@@ -32,6 +33,9 @@ public class PlayerCtrl : MonoBehaviour
         _movement = playerInput.actions.FindAction("Movement");
         _run = playerInput.actions.FindAction("Run");
         _look = playerInput.actions.FindAction("Look");
+        
+        GameObject player = GameObject.FindWithTag("Player");
+        _playerShooting = player.GetComponent<PlayerShooting>();
     }
 
     void Update()
@@ -108,6 +112,38 @@ public class PlayerCtrl : MonoBehaviour
         else
         {
             anim.Play("moving");
+        }
+
+        _weaponNum = _playerShooting.weaponNum;
+
+        if (_weaponNum == 0)
+        {
+            SetAnimatorLayerWeight(0, 1f); 
+            SetAnimatorLayerWeight(1, 1f); 
+            SetAnimatorLayerWeight(2, 0f); 
+        }
+        if (_weaponNum == 1)
+        {
+            SetAnimatorLayerWeight(0, 1f); 
+            SetAnimatorLayerWeight(1, 1f); 
+            SetAnimatorLayerWeight(2, 1f); 
+        }
+
+        if (_playerShooting.startShoot)
+        {
+            anim.SetBool("isAttack",true);
+        }
+        else
+        {
+            anim.SetBool("isAttack",false);
+        }
+    }
+    
+    private void SetAnimatorLayerWeight(int layerIndex, float weight)
+    {
+        if (layerIndex < anim.layerCount)
+        {
+            anim.SetLayerWeight(layerIndex, weight);
         }
     }
 }

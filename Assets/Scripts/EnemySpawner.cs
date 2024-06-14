@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
@@ -7,15 +8,18 @@ public class EnemySpawner : MonoBehaviour
     [Header("Spawner Settings")]
     public Transform[] spawnPoints; // 敌人生成位置的数组
     public List<Wave> waves; // 存储波次的列表
-    public float waveInterval = 10f; // 每波之间的时间间隔
+    public int waveInterval; // 每波之间的时间间隔
 
     public Transform target;
     
     private int _currentWaveIndex = 0;
     private bool spawningWave = false;
+    
+    public Text countdownText; 
 
     private void Start()
     {
+        countdownText.text = "";
         StartCoroutine(SpawnWaves());
     }
 
@@ -27,10 +31,13 @@ public class EnemySpawner : MonoBehaviour
             {
                 Wave currentWave = waves[_currentWaveIndex];
                 yield return StartCoroutine(SpawnEnemyWave(currentWave));
+                
                 _currentWaveIndex++;
+                
                 if (_currentWaveIndex < waves.Count)
                 {
-                    yield return new WaitForSeconds(waveInterval); // 在波次生成完成後等待
+                    // 开始倒计时
+                    yield return StartCoroutine(StartCountdown());
                 }
             }
             else
@@ -62,10 +69,19 @@ public class EnemySpawner : MonoBehaviour
         int spawnIndex = Random.Range(0, spawnPoints.Length);
         Transform spawnPoint = spawnPoints[spawnIndex];
         GameObject enemy = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
-        EnemyCtrl enemyCtrl = enemy.GetComponent<EnemyCtrl>();
-        if (enemyCtrl != null)
+    }
+    
+    private IEnumerator StartCountdown()
+    {
+        int currentTime = waveInterval;
+
+        while (currentTime > 0)
         {
-            enemyCtrl.SetTarget(target); // 设置敌人的目标
+            countdownText.text = "Next wave will arrive in: " + currentTime.ToString(""); // Format the time to one decimal place
+            yield return new WaitForSeconds(1f);
+            currentTime--;
         }
+
+        countdownText.text = "";
     }
 }

@@ -2,29 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 public class PlayerShooting : MonoBehaviour
 {
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform bulletSpawnPoint;
     [SerializeField] private float bulletSpeed = 20f;
-    [SerializeField] private float bulletInterval = 0.1f;
-    [SerializeField] private bool startShoot;
+    [SerializeField] private float bulletInterval = 1f;
+    [SerializeField] public bool startShoot;
     [SerializeField] private bool isShooting;
-
-    private int _weaponNum;
-    private InputAction _switch;
     
+    public int weaponNum;
+
+    private InputAction _switch;
     private PlayerInput _playerInput;
     private InputAction _shootAction;
+    private bool _isShooting;
+    private bool _canSwitchWeapon = true;
 
     void Start()
     {
         _playerInput = GetComponent<PlayerInput>();
         _shootAction = _playerInput.actions["Shoot"];
         _switch = _playerInput.actions["Switch"];
-        startShoot = false;
+        weaponNum = 1;
     }
 
     void Update()
@@ -44,9 +45,9 @@ public class PlayerShooting : MonoBehaviour
         {
             StartCoroutine(Shoot());
         }
-        SwitchWeapon();
+        HandleWeaponSwitch();
     }
-    
+
     IEnumerator Shoot()
     {
         if (!isShooting)
@@ -61,27 +62,37 @@ public class PlayerShooting : MonoBehaviour
             isShooting = true;
             yield return new WaitForSeconds(bulletInterval);//射擊間隔
             isShooting = false;
-
         }
     }
-    
-    private void SwitchWeapon()
+
+    private void HandleWeaponSwitch()
     {
         float switchWeapon = _switch.ReadValue<float>();
-        if (switchWeapon > 0)
+        if (switchWeapon > 0 && _canSwitchWeapon)
         {
-            if (_weaponNum == 0)
-            {
-                _weaponNum = 1;
-                Debug.Log("Switch to Weapon 1");
-                bulletInterval = 1f;
-            }
-            else
-            {
-                _weaponNum = 0;
-                Debug.Log("Switch to Weapon 0");
-                bulletInterval = 0.1f;
-            }
+            _canSwitchWeapon = false;
+            SwitchWeapon();
+            StartCoroutine(ResetSwitchCooldown());
         }
+    }
+
+    private void SwitchWeapon()
+    {
+        if (weaponNum == 0)
+        {
+            weaponNum = 1;
+            bulletInterval = 0.5f;
+        }
+        else
+        {
+            weaponNum = 0;
+            bulletInterval = 0.1f;
+        }
+    }
+
+    private IEnumerator ResetSwitchCooldown()
+    {
+        yield return new WaitForSeconds(0.5f); // Adjust this value if needed
+        _canSwitchWeapon = true;
     }
 }

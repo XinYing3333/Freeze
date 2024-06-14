@@ -9,18 +9,23 @@ public class EnemyCtrl : MonoBehaviour
     [Header("Enemy State")]
     public EnemyType enemyType; 
     public Transform target; 
-    private NavMeshAgent _navMeshAgent;
-    private bool _isAttack;
-
+    public Animator anim;
+    
     public Slider healthBar;
 
     [Header("Attacked State")]
     public float bulletAttack;
 
-    public Animator anim;
-    
-    private Vector3 randomTarget;
-    private LineRenderer lineRenderer;
+    [Header("Blood Effect")]
+    public GameObject bloodPrefab;  // Reference to the Blood prefab
+
+    private NavMeshAgent _navMeshAgent;   
+    private bool _isAttack;
+    private bool _isDead;
+    private Vector3 _randomTarget;
+    private LineRenderer _lineRenderer;
+
+    private CapsuleCollider _col;
 
     void Start()
     {
@@ -31,53 +36,63 @@ public class EnemyCtrl : MonoBehaviour
         healthBar = hp.GetComponent<Slider>();
 
         _navMeshAgent = GetComponent<NavMeshAgent>();
-        lineRenderer = gameObject.AddComponent<LineRenderer>();
-        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-        lineRenderer.startColor = Color.green;
-        lineRenderer.endColor = Color.red;
-        lineRenderer.startWidth = 0.2f;
-        lineRenderer.endWidth = 0.2f;
-        lineRenderer.positionCount = 0;
+        _col = GetComponent<CapsuleCollider>();
+        _lineRenderer = gameObject.AddComponent<LineRenderer>();
+        _lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        _lineRenderer.startColor = Color.green;
+        _lineRenderer.endColor = Color.red;
+        _lineRenderer.startWidth = 0.2f;
+        _lineRenderer.endWidth = 0.2f;
+        _lineRenderer.positionCount = 0;
 
         if (target != null)
         {
             // 为每个敌人生成一个随机目标点
-            randomTarget = GenerateRandomTarget(target.position, 5f); // 5f 是半径，可以根据需要调整
-            _navMeshAgent.SetDestination(randomTarget);
+            _randomTarget = GenerateRandomTarget(target.position, 5f); // 5f 是半径，可以根据需要调整
+            _navMeshAgent.SetDestination(_randomTarget);
         }
 
         bulletAttack = 10f;
+        _isDead = false;
     }
 
     void Update()
     {
-        if (enemyType.enemyHealth <= 0)
+        if (enemyType.enemyHealth <= 0 && !_isDead)
         {
             StartCoroutine(OnEnemyDeath());
         }
 
         // 确保敌人向随机目标点移动
-        if (_navMeshAgent.remainingDistance < 0.5f && target != null)
+        if (!_isDead && _navMeshAgent != null && _navMeshAgent.isOnNavMesh)
         {
-            randomTarget = GenerateRandomTarget(target.position, 1f);
-            _navMeshAgent.SetDestination(randomTarget);
-        }
+            if (_navMeshAgent.remainingDistance < 0.5f && target != null)
+            {
+                _randomTarget = GenerateRandomTarget(target.position, 1f);
+                _navMeshAgent.SetDestination(_randomTarget);
+            }
 
-        DrawPath();
+            DrawPath();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Bullet"))
         {
-            anim.SetTrigger("isHurt");
-            enemyType.enemyHealth -= bulletAttack;
+            if (!_isDead)
+            {
+                PlayBloodEffect(other.transform.position);
+
+                anim.SetTrigger("isHurt");
+                enemyType.enemyHealth -= bulletAttack;   
+            }
         }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("IceCreamCar") && !_isAttack)
+        if (other.CompareTag("IceCreamCar") && !_isAttack && !_isDead)
         {
             StartCoroutine(OnEnemyAttack());
         }
@@ -88,6 +103,7 @@ public class EnemyCtrl : MonoBehaviour
         if(healthBar.value > 0)
         {
             _isAttack = true;
+            anim.SetTrigger("isAttack");
             yield return new WaitForSeconds(enemyType.enemyAttackSpeed);
             healthBar.value -= enemyType.enemyAttack;
             _isAttack = false;
@@ -96,19 +112,19 @@ public class EnemyCtrl : MonoBehaviour
 
     IEnumerator OnEnemyDeath()
     {
-// 禁用NavMeshAgent以停止敌人的移动
-        _navMeshAgent.isStopped = true;
-        _navMeshAgent.enabled = false;
-
-        // 停止所有动画，只播放死亡动画
-        anim.SetTrigger("isDeath");
-
-        // 禁用Collider防止后续碰撞
-        Collider col = GetComponent<Collider>();
-        if (col != null)
+        _isDead = true;
+        
+        // 禁用NavMeshAgent以停止敌人的移动
+        if (_navMeshAgent != null && _navMeshAgent.isOnNavMesh)
         {
-            col.enabled = false;
+            _navMeshAgent.isStopped = true;
+            _navMeshAgent.ResetPath();
+            _navMeshAgent.enabled = false;
         }
+        
+        _col.enabled = false;
+        
+        anim.SetTrigger("isDeath");
 
         // 等待死亡动画播放完成
         yield return new WaitForSeconds(4f);
@@ -122,8 +138,8 @@ public class EnemyCtrl : MonoBehaviour
         target = newTarget;
         if (_navMeshAgent != null)
         {
-            randomTarget = GenerateRandomTarget(target.position, 5f);
-            _navMeshAgent.SetDestination(randomTarget);
+            _randomTarget = GenerateRandomTarget(target.position, 5f);
+            _navMeshAgent.SetDestination(_randomTarget);
         }
     }
 
@@ -138,16 +154,27 @@ public class EnemyCtrl : MonoBehaviour
         return center;
     }
 
+    private void PlayBloodEffect(Vector3 position)
+    {
+        GameObject bloodEffect = Instantiate(bloodPrefab, position, Quaternion.identity);
+        ParticleSystem ps = bloodEffect.GetComponent<ParticleSystem>();
+        if (ps != null)
+        {
+            ps.Play();
+            Destroy(bloodEffect, ps.main.duration); // Destroy the blood effect object after the particle system duration
+        }
+    }
+
     private void DrawPath()
     {
-        if (_navMeshAgent.hasPath)
+        if (_navMeshAgent != null && _navMeshAgent.hasPath)
         {
-            lineRenderer.positionCount = _navMeshAgent.path.corners.Length;
-            lineRenderer.SetPositions(_navMeshAgent.path.corners);
+            _lineRenderer.positionCount = _navMeshAgent.path.corners.Length;
+            _lineRenderer.SetPositions(_navMeshAgent.path.corners);
         }
         else
         {
-            lineRenderer.positionCount = 0;
+            _lineRenderer.positionCount = 0;
         }
     }
 }
