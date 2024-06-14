@@ -53,8 +53,11 @@ MonoBehaviour:
     enemyHealth: 200
     enemyAttack: 10
     enemyAttackSpeed: 4
+    enemyScore: 247
   target: {fileID: 0}
   anim: {fileID: 7323278703032993538}
+  scoreCount: 0
+  scoreText: {fileID: 0}
   healthBar: {fileID: 0}
   bulletAttack: 0
   bloodPrefab: {fileID: 1122785626453040492, guid: 0699ffe7fc690c14ebb1c9b3593792e1, type: 3}

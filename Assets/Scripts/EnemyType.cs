@@ -9,4 +9,5 @@ public class EnemyType
     public float enemyHealth;
     public float enemyAttack;
     public float enemyAttackSpeed;
+    public float enemyScore;
 }

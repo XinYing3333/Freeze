@@ -11,6 +11,7 @@ public class EnemyCtrl : MonoBehaviour
     public Transform target; 
     public Animator anim;
     
+    [Header("UI State")]
     public Slider healthBar;
 
     [Header("Attacked State")]
@@ -18,23 +19,35 @@ public class EnemyCtrl : MonoBehaviour
 
     [Header("Blood Effect")]
     public GameObject bloodPrefab;  // Reference to the Blood prefab
-
+    
     private NavMeshAgent _navMeshAgent;   
     private bool _isAttack;
     private bool _isDead;
     private Vector3 _randomTarget;
     private LineRenderer _lineRenderer;
+    
+    private PlayerShooting _playerShooting;
+    private int _weaponNum;
 
     private CapsuleCollider _col;
+    private GameManager _gameManager; 
+
 
     void Start()
     {
+        GameObject player = GameObject.FindWithTag("Player");
+        _playerShooting = player.GetComponent<PlayerShooting>();
+        _weaponNum = _playerShooting.weaponNum;
+        
         GameObject tg = GameObject.FindWithTag("IceCreamCar");
         target = tg.transform;
             
         GameObject hp = GameObject.Find("HealthBar");
         healthBar = hp.GetComponent<Slider>();
-
+        
+        GameObject gm = GameObject.Find("GameManager");
+        _gameManager = gm.GetComponent<GameManager>();
+        
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _col = GetComponent<CapsuleCollider>();
         _lineRenderer = gameObject.AddComponent<LineRenderer>();
@@ -52,7 +65,6 @@ public class EnemyCtrl : MonoBehaviour
             _navMeshAgent.SetDestination(_randomTarget);
         }
 
-        bulletAttack = 10f;
         _isDead = false;
     }
 
@@ -71,8 +83,14 @@ public class EnemyCtrl : MonoBehaviour
                 _randomTarget = GenerateRandomTarget(target.position, 1f);
                 _navMeshAgent.SetDestination(_randomTarget);
             }
-
-            DrawPath();
+            //DrawPath();
+        }
+        
+        SwitchWeapon();
+        
+        if (healthBar.value <= 0)
+        {
+            _gameManager.isOver = true; // GameOver!
         }
     }
 
@@ -97,7 +115,7 @@ public class EnemyCtrl : MonoBehaviour
             StartCoroutine(OnEnemyAttack());
         }
     }
-
+    
     IEnumerator OnEnemyAttack()
     {
         if(healthBar.value > 0)
@@ -114,22 +132,21 @@ public class EnemyCtrl : MonoBehaviour
     {
         _isDead = true;
         
-        // 禁用NavMeshAgent以停止敌人的移动
-        if (_navMeshAgent != null && _navMeshAgent.isOnNavMesh)
+        _gameManager.scoreCount += enemyType.enemyScore;
+        _gameManager.enemyKill += 1;
+        
+        if (_navMeshAgent.isOnNavMesh)
         {
             _navMeshAgent.isStopped = true;
             _navMeshAgent.ResetPath();
             _navMeshAgent.enabled = false;
         }
-        
         _col.enabled = false;
-        
+
         anim.SetTrigger("isDeath");
 
-        // 等待死亡动画播放完成
         yield return new WaitForSeconds(4f);
 
-        // 删除敌人对象
         Destroy(gameObject);
     }
 
@@ -153,6 +170,19 @@ public class EnemyCtrl : MonoBehaviour
         }
         return center;
     }
+    
+    private void SwitchWeapon()
+    {
+        switch (_weaponNum)
+        {
+            case 0:
+                bulletAttack = 20f;
+                break;
+            case 1:
+                bulletAttack = 50f;
+                break;
+        }
+    }
 
     private void PlayBloodEffect(Vector3 position)
     {
@@ -164,7 +194,7 @@ public class EnemyCtrl : MonoBehaviour
             Destroy(bloodEffect, ps.main.duration); // Destroy the blood effect object after the particle system duration
         }
     }
-
+    
     private void DrawPath()
     {
         if (_navMeshAgent != null && _navMeshAgent.hasPath)

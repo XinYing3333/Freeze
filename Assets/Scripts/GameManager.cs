@@ -1,9 +1,21 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    [Header("UI State")]
+    public float scoreCount;
+    public int enemyKill;
+    public Text scoreText;
+    public Text finalScoreText;
+    public Text enemyKillText;
+
+    
+    public bool isOver;
+    private GameObject _gameOverMenu;
+    
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -19,22 +31,41 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        // Initialize game settings or states here
+        _gameOverMenu = GameObject.Find("GameOver");
+        _gameOverMenu.SetActive(false);
+        
+        GameObject score = GameObject.Find("Score");
+        scoreText = score.GetComponent<Text>();
+
+        isOver = false;
+        scoreCount = 0f;
+        enemyKill = 0;
     }
 
     private void Update()
     {
-        // Global game logic can be managed here
+       UpdateScore();
+       EndGame();
     }
 
-    // Example of a method to manage game states
     public void StartGame()
     {
-        // Logic to start the game
+        
+    }
+
+    private void UpdateScore()
+    {
+        scoreText.text = "Score: " + scoreCount.ToString("");
+        finalScoreText.text = scoreText.text;
+        enemyKillText.text = "Enemy Killed: " + enemyKill.ToString("");
     }
 
     public void EndGame()
     {
-        // Logic to end the game
-    }
+        if (isOver)
+        {
+            _gameOverMenu.SetActive(true);
+            Time.timeScale = 0f;
+        }
+}
 }
