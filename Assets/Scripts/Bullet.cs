@@ -37,12 +37,12 @@ public class Bullet : MonoBehaviour
         switch (_weaponNum)
         {
             case 0:
-                speed = 20f;
-                lifeTime = 0.3f;
+                speed = 15f;
+                lifeTime = 1.5f;
                 break;
             case 1:
-                speed = 30f;
-                lifeTime = 2.5f;
+                speed = 20f;
+                lifeTime = 0.3f;
                 break;
         }
     }

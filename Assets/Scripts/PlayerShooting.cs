@@ -7,6 +7,8 @@ public class PlayerShooting : MonoBehaviour
 {
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform bulletSpawnPoint;
+    [SerializeField] private Transform bulletSpawnPoint2;
+    [SerializeField] private Transform bulletSpawnPoint3;
     [SerializeField] private float bulletSpeed = 20f;
     [SerializeField] private float bulletInterval = 1f;
     [SerializeField] public bool startShoot;
@@ -18,6 +20,7 @@ public class PlayerShooting : MonoBehaviour
     private PlayerInput _playerInput;
     private InputAction _shootAction;
     private bool _isShooting;
+    public bool isDash;
     private bool _canSwitchWeapon = true;
 
     void Start()
@@ -41,7 +44,7 @@ public class PlayerShooting : MonoBehaviour
             startShoot = false;
         }
 
-        if (startShoot)
+        if (startShoot && !isDash)
         {
             StartCoroutine(Shoot());
         }
@@ -53,6 +56,12 @@ public class PlayerShooting : MonoBehaviour
         if (!isShooting)
         {
             GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+            if (weaponNum == 1)
+            {
+                Instantiate(bulletPrefab, bulletSpawnPoint2.position, bulletSpawnPoint2.rotation);
+                Instantiate(bulletPrefab, bulletSpawnPoint3.position, bulletSpawnPoint3.rotation);
+            }
+            
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
             if (rb != null)
             {
@@ -81,7 +90,7 @@ public class PlayerShooting : MonoBehaviour
         if (weaponNum == 0)
         {
             weaponNum = 1;
-            bulletInterval = 0.5f;
+            bulletInterval = 0.8f;
         }
         else
         {

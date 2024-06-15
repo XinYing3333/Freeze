@@ -27,17 +27,16 @@ public class EnemyCtrl : MonoBehaviour
     private LineRenderer _lineRenderer;
     
     private PlayerShooting _playerShooting;
-    private int _weaponNum;
 
     private CapsuleCollider _col;
     private GameManager _gameManager; 
+    private ButtonFX _buttonFX;
 
 
     void Start()
     {
         GameObject player = GameObject.FindWithTag("Player");
         _playerShooting = player.GetComponent<PlayerShooting>();
-        _weaponNum = _playerShooting.weaponNum;
         
         GameObject tg = GameObject.FindWithTag("IceCreamCar");
         target = tg.transform;
@@ -47,6 +46,9 @@ public class EnemyCtrl : MonoBehaviour
         
         GameObject gm = GameObject.Find("GameManager");
         _gameManager = gm.GetComponent<GameManager>();
+        
+        GameObject myFX = GameObject.Find("ButtonFX");
+        _buttonFX = myFX.GetComponent<ButtonFX>();
         
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _col = GetComponent<CapsuleCollider>();
@@ -86,12 +88,11 @@ public class EnemyCtrl : MonoBehaviour
             //DrawPath();
         }
         
-        SwitchWeapon();
-        
         if (healthBar.value <= 0)
         {
             _gameManager.isOver = true; // GameOver!
         }
+        SwitchWeapon();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -101,6 +102,7 @@ public class EnemyCtrl : MonoBehaviour
             if (!_isDead)
             {
                 PlayBloodEffect(other.transform.position);
+                _buttonFX.PlayFX("ZombieHit");
 
                 anim.SetTrigger("isHurt");
                 enemyType.enemyHealth -= bulletAttack;   
@@ -122,8 +124,9 @@ public class EnemyCtrl : MonoBehaviour
         {
             _isAttack = true;
             anim.SetTrigger("isAttack");
-            yield return new WaitForSeconds(enemyType.enemyAttackSpeed);
+            yield return new WaitForSeconds(1f);
             healthBar.value -= enemyType.enemyAttack;
+            yield return new WaitForSeconds(enemyType.enemyAttackSpeed);
             _isAttack = false;
         }
     }
@@ -132,8 +135,11 @@ public class EnemyCtrl : MonoBehaviour
     {
         _isDead = true;
         
+        _buttonFX.PlayFX("ZombieDead");
+        
         _gameManager.scoreCount += enemyType.enemyScore;
         _gameManager.enemyKill += 1;
+        _gameManager.uiAnim.Play("UI_Anim");
         
         if (_navMeshAgent.isOnNavMesh)
         {
@@ -145,7 +151,7 @@ public class EnemyCtrl : MonoBehaviour
 
         anim.SetTrigger("isDeath");
 
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(5f);
 
         Destroy(gameObject);
     }
@@ -173,10 +179,10 @@ public class EnemyCtrl : MonoBehaviour
     
     private void SwitchWeapon()
     {
-        switch (_weaponNum)
+        switch (_playerShooting.weaponNum)
         {
             case 0:
-                bulletAttack = 20f;
+                bulletAttack = 10f;
                 break;
             case 1:
                 bulletAttack = 50f;

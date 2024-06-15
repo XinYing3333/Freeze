@@ -8,21 +8,32 @@ public class PlayerCtrl : MonoBehaviour
     [SerializeField] float movementSpeed = 3.0f;
     [SerializeField] float turnSpeed = 10f;
 
+    [Header("Dash Settings")]
+    [SerializeField] float dashForce = 5.0f;
+    [SerializeField] float dashTime = 1f;
+    [SerializeField] float dashCooldown = 0.8f;
+    
     [Header("Input Settings")]
     public PlayerInput playerInput;
     public Animator anim;
 
     private InputAction _movement;
     private InputAction _run;
+    private InputAction _dash;
 
     private bool _isMove;
     private bool _isRun;
+    private bool _isDashing;
+    private float _lastDashTime;
     private Vector3 _rawInputMovement;
     private InputAction _look;
     private Vector3 _rawInputLook;
 
     private PlayerShooting _playerShooting;
     private int _weaponNum;
+    
+    private GameManager _gameManager; 
+
 
     private Rigidbody _rb;
 
@@ -34,20 +45,33 @@ public class PlayerCtrl : MonoBehaviour
         _run = playerInput.actions.FindAction("Run");
         _look = playerInput.actions.FindAction("Look");
         
+        GameObject gm = GameObject.Find("GameManager");
+        _gameManager = gm.GetComponent<GameManager>();
+        
+        _dash = playerInput.actions.FindAction("Dash");
+        _dash.performed += ctx => Dash();
+        
         GameObject player = GameObject.FindWithTag("Player");
         _playerShooting = player.GetComponent<PlayerShooting>();
     }
 
     void Update()
     {
-        OnMovement();
-        OnLook();
-        SwitchAnim();
+        if (!_gameManager.isOver)
+        {
+            OnMovement();
+            OnLook();
+            SwitchAnim();
+        }
+        
     }
 
     void FixedUpdate()
     {
-        RotateMove();
+        if (!_gameManager.isOver)
+        {
+            RotateMove();
+        }
     }
 
     public void OnMovement()
@@ -99,8 +123,41 @@ public class PlayerCtrl : MonoBehaviour
         _rb.rotation = Quaternion.Slerp(_rb.rotation, targetRotation, turnSpeed * Time.deltaTime);
     }
     
+    private void Dash()
+    {
+        if (!_isDashing && Time.time >= _lastDashTime + dashCooldown)
+        {
+            StartCoroutine(PerformDash());
+        }
+    }
+
+    private IEnumerator PerformDash()
+    {
+        _isDashing = true;
+        _playerShooting.isDash = true;
+        
+        Vector3 dashDirection = _rawInputMovement.normalized;
+        if (dashDirection == Vector3.zero) // 防止没有移动输入时 Dash
+        {
+            dashDirection = transform.forward;
+        }
+
+        _rb.AddForce(dashDirection * dashForce, ForceMode.Impulse); // 使用 AddForce 添加冲力
+
+        yield return new WaitForSeconds(dashTime); // 等待 dashTime 秒
+
+        _playerShooting.isDash = false;
+        _isDashing = false;
+        _lastDashTime = Time.time;
+    }
+    
     private void SwitchAnim()
     {
+        if (_isDashing)
+        {
+            StartCoroutine(DashAnim());
+            return;
+        }
         if (!_isMove)
         {
             anim.Play("Happy Idle");
@@ -118,15 +175,17 @@ public class PlayerCtrl : MonoBehaviour
 
         if (_weaponNum == 0)
         {
-            SetAnimatorLayerWeight(0, 1f); 
-            SetAnimatorLayerWeight(1, 1f); 
-            SetAnimatorLayerWeight(2, 0f); 
+            SetAnimatorLayerWeight("Base Layer", 1f); 
+            SetAnimatorLayerWeight("ShootA", 1f); 
+            SetAnimatorLayerWeight("ShootB", 0f); 
+            SetAnimatorLayerWeight("Dash", 0f); 
         }
         if (_weaponNum == 1)
         {
-            SetAnimatorLayerWeight(0, 1f); 
-            SetAnimatorLayerWeight(1, 1f); 
-            SetAnimatorLayerWeight(2, 1f); 
+            SetAnimatorLayerWeight("Base Layer", 1f); 
+            SetAnimatorLayerWeight("ShootA", 1f); 
+            SetAnimatorLayerWeight("ShootB", 1f); 
+            SetAnimatorLayerWeight("Dash", 0f); 
         }
 
         if (_playerShooting.startShoot)
@@ -139,11 +198,21 @@ public class PlayerCtrl : MonoBehaviour
         }
     }
     
-    private void SetAnimatorLayerWeight(int layerIndex, float weight)
+    private void SetAnimatorLayerWeight(string layerName, float weight)
     {
-        if (layerIndex < anim.layerCount)
+        int layerIndex = anim.GetLayerIndex(layerName);
+        if (layerIndex != -1)
         {
             anim.SetLayerWeight(layerIndex, weight);
         }
+    }
+
+    IEnumerator DashAnim()
+    {
+        anim.SetTrigger("isDash");
+        SetAnimatorLayerWeight("Base Layer", 1f); 
+        SetAnimatorLayerWeight("ShootA", 0f); 
+        SetAnimatorLayerWeight("ShootB", 0f);
+        yield return new WaitForSeconds(2f);
     }
 }

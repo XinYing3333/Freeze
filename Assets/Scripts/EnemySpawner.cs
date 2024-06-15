@@ -74,10 +74,11 @@ public class EnemySpawner : MonoBehaviour
     private IEnumerator StartCountdown()
     {
         int currentTime = waveInterval;
-
+        
         while (currentTime > 0)
         {
-            countdownText.text = "Next wave will arrive in: " + currentTime.ToString(""); // Format the time to one decimal place
+            countdownText.text = "Wave " + (_currentWaveIndex + 1).ToString("") + " arrive in:  " + currentTime.ToString(""); // Format the time to one decimal place
+
             yield return new WaitForSeconds(1f);
             currentTime--;
         }

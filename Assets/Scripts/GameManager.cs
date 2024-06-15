@@ -1,34 +1,23 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; }
-
     [Header("UI State")]
     public float scoreCount;
     public int enemyKill;
     public Text scoreText;
+    public Animator uiAnim;
     public Text finalScoreText;
     public Text enemyKillText;
-
+    public Text highestScoreText;
     
     public bool isOver;
     private GameObject _gameOverMenu;
-    
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-    }
+    private float _highestScore;
 
+    
     private void Start()
     {
         _gameOverMenu = GameObject.Find("GameOver");
@@ -36,10 +25,14 @@ public class GameManager : MonoBehaviour
         
         GameObject score = GameObject.Find("Score");
         scoreText = score.GetComponent<Text>();
+        uiAnim = score.GetComponent<Animator>();
 
         isOver = false;
         scoreCount = 0f;
         enemyKill = 0;
+        
+        _highestScore = PlayerPrefs.GetFloat("HighestScore", 0f);
+        highestScoreText.text = "Highest Score: " + _highestScore.ToString("");
     }
 
     private void Update()
@@ -58,6 +51,14 @@ public class GameManager : MonoBehaviour
         scoreText.text = "Score: " + scoreCount.ToString("");
         finalScoreText.text = scoreText.text;
         enemyKillText.text = "Enemy Killed: " + enemyKill.ToString("");
+        
+        if (scoreCount > _highestScore)
+        {
+            _highestScore = scoreCount;
+            PlayerPrefs.SetFloat("HighestScore", _highestScore);
+            PlayerPrefs.Save();
+            highestScoreText.text = "Highest Score: " + _highestScore.ToString("");
+        }
     }
 
     public void EndGame()
@@ -67,5 +68,12 @@ public class GameManager : MonoBehaviour
             _gameOverMenu.SetActive(true);
             Time.timeScale = 0f;
         }
-}
+    }
+
+    public void RestartGame()
+    {
+        isOver = false;
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Scenes/GameScene");
+    }
 }

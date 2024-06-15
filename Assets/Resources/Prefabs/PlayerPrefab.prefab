@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6163154654331490581
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5319774996562486803}
+  m_Layer: 0
+  m_Name: BP02
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5319774996562486803
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6163154654331490581}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.2588191, z: 0, w: 0.9659258}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6257322183973438444}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &6257322183973438440
 GameObject:
   m_ObjectHideFlags: 0
@@ -36,6 +67,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4291045680119025410}
+  - {fileID: 5319774996562486803}
+  - {fileID: 7236135860811986330}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6257322183973438445
@@ -60,11 +93,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 1553892942695462150, guid: dc130a6bde9c24149ba0646a0d433a45, type: 3}
   bulletSpawnPoint: {fileID: 6257322183973438444}
+  bulletSpawnPoint2: {fileID: 5319774996562486803}
+  bulletSpawnPoint3: {fileID: 7236135860811986330}
   bulletSpeed: 20
   bulletInterval: 1
   startShoot: 0
   isShooting: 0
   weaponNum: 0
+  isDash: 0
 --- !u!114 &6257322183973438446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,6 +115,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 5
   turnSpeed: 1000
+  dashForce: 5
+  dashTime: 1
+  dashCooldown: 0.8
   playerInput: {fileID: 6257322183973438432}
   anim: {fileID: 6523644120514135973}
 --- !u!114 &6257322183973438432
@@ -181,6 +220,37 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!1 &6995691203391255771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7236135860811986330}
+  m_Layer: 0
+  m_Name: BP03
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7236135860811986330
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6995691203391255771}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.258819, z: 0, w: 0.9659259}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6257322183973438444}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1001 &7656876408082842613
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -359,11 +429,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3780910882935968385, guid: 4007d7463cc99e54b9469abcee13aa0c, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.43331483
+      value: -0.43377796
+      objectReference: {fileID: 0}
+    - target: {fileID: 3780910882935968385, guid: 4007d7463cc99e54b9469abcee13aa0c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.55795705
       objectReference: {fileID: 0}
     - target: {fileID: 3780910882935968385, guid: 4007d7463cc99e54b9469abcee13aa0c, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.43373072
+      value: -0.4341943
+      objectReference: {fileID: 0}
+    - target: {fileID: 3780910882935968385, guid: 4007d7463cc99e54b9469abcee13aa0c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.558566
       objectReference: {fileID: 0}
     - target: {fileID: 3780910882935968385, guid: 4007d7463cc99e54b9469abcee13aa0c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
