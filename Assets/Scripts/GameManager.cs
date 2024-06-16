@@ -41,11 +41,6 @@ public class GameManager : MonoBehaviour
        EndGame();
     }
 
-    public void StartGame()
-    {
-        
-    }
-
     private void UpdateScore()
     {
         scoreText.text = "Score: " + scoreCount.ToString("");
@@ -75,5 +70,12 @@ public class GameManager : MonoBehaviour
         isOver = false;
         Time.timeScale = 1f;
         SceneManager.LoadScene("Scenes/GameScene");
+    }
+    
+    public void MainMenu()
+    {
+        isOver = false;
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Scenes/MainMenu");
     }
 }

@@ -34,7 +34,7 @@ public class PlayerCtrl : MonoBehaviour
     
     private GameManager _gameManager; 
 
-
+    private ButtonFX _buttonFX;
     private Rigidbody _rb;
 
     void Start()
@@ -44,6 +44,9 @@ public class PlayerCtrl : MonoBehaviour
         _movement = playerInput.actions.FindAction("Movement");
         _run = playerInput.actions.FindAction("Run");
         _look = playerInput.actions.FindAction("Look");
+        
+        GameObject myFX = GameObject.Find("ButtonFX");
+        _buttonFX = myFX.GetComponent<ButtonFX>();
         
         GameObject gm = GameObject.Find("GameManager");
         _gameManager = gm.GetComponent<GameManager>();
@@ -96,13 +99,11 @@ public class PlayerCtrl : MonoBehaviour
     public void OnLook()
     {
         Vector2 inputLook = _look.ReadValue<Vector2>();
-        // 根据输入值进行角色旋转
+
         float sensitivity = 1.0f; // 设置旋转灵敏度
         float lookX = inputLook.x * sensitivity;
         float lookY = inputLook.y * sensitivity;
 
-        // 根据需要应用水平和垂直旋转
-        // 这里只展示了水平旋转，你也可以添加垂直旋转
         Vector3 lookDirection = new Vector3(lookX, 0, lookY);
         if (lookDirection.sqrMagnitude > 0.01f)
         {
@@ -135,6 +136,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         _isDashing = true;
         _playerShooting.isDash = true;
+        _buttonFX.PlayFX("Rolling");
         
         Vector3 dashDirection = _rawInputMovement.normalized;
         if (dashDirection == Vector3.zero) // 防止没有移动输入时 Dash

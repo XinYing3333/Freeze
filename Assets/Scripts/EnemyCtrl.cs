@@ -182,7 +182,7 @@ public class EnemyCtrl : MonoBehaviour
         switch (_playerShooting.weaponNum)
         {
             case 0:
-                bulletAttack = 10f;
+                bulletAttack = 12f;
                 break;
             case 1:
                 bulletAttack = 50f;

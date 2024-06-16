@@ -96,7 +96,7 @@ MonoBehaviour:
   bulletSpawnPoint2: {fileID: 5319774996562486803}
   bulletSpawnPoint3: {fileID: 7236135860811986330}
   bulletSpeed: 20
-  bulletInterval: 1
+  bulletInterval: 0.6
   startShoot: 0
   isShooting: 0
   weaponNum: 0
@@ -165,6 +165,62 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: c915efe8-b9a4-45bb-a2b3-e9297da04341
     m_ActionName: PlayerControls/Shoot[/XInputControllerWindows/rightTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6e39b825-4b37-418c-9f0d-542599b73dfd
+    m_ActionName: PlayerControls/Run[/Keyboard/shift,/XInputControllerWindows/leftTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 9c8be534-f976-400e-b6b2-bd6bba52aa23
+    m_ActionName: PlayerControls/Dash[/Keyboard/space,/XInputControllerWindows/buttonSouth]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6ed92552-4e65-4598-85ac-734d8f2b115d
+    m_ActionName: PlayerControls/Look[/XInputControllerWindows/rightStick/up,/XInputControllerWindows/rightStick/down,/XInputControllerWindows/rightStick/left,/XInputControllerWindows/rightStick/right]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0ad92fe7-176a-4972-9d48-c52cd9fb7c97
+    m_ActionName: PlayerControls/Switch[/Keyboard/q,/XInputControllerWindows/buttonEast]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 4ef6ce93-58e2-4e85-9f05-3078e7e70b2a
+    m_ActionName: UI/Navigate[/XInputControllerWindows/leftStick/up,/XInputControllerWindows/rightStick/up,/XInputControllerWindows/leftStick/down,/XInputControllerWindows/rightStick/down,/XInputControllerWindows/leftStick/left,/XInputControllerWindows/rightStick/left,/XInputControllerWindows/leftStick/right,/XInputControllerWindows/rightStick/right,/XInputControllerWindows/dpad,/XInputControllerWindows/dpad/up,/XInputControllerWindows/dpad/down,/XInputControllerWindows/dpad/left,/XInputControllerWindows/dpad/right,/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2f504956-1867-4654-bf68-b720b80b9366
+    m_ActionName: UI/Submit[/XInputControllerWindows/buttonSouth,/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c5c5d404-f63d-4ea4-8bbe-49189a706623
+    m_ActionName: UI/Cancel[/Keyboard/escape,/XInputControllerWindows/buttonEast]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 103419de-8fad-40d4-b7a9-0e99624d3ab9
+    m_ActionName: UI/Point[/Mouse/position,/Pen/position]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 84d87234-5a23-497e-a6ef-1e12b7fdaa56
+    m_ActionName: UI/Click[/Mouse/leftButton,/Pen/tip]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 55b6edf8-6294-428c-a1c4-9346586ef19a
+    m_ActionName: UI/ScrollWheel[/Mouse/scroll]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 495b522c-421b-4aad-b43e-71b3ac0e48d0
+    m_ActionName: UI/MiddleClick[/Mouse/middleButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ce4bb71c-36f1-44ea-b91a-47cee9abd185
+    m_ActionName: UI/RightClick[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6646b2f0-9968-42f4-8927-7a3d0f45b2a6
+    m_ActionName: UI/TrackedDevicePosition
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 75a8ec87-a675-4eb5-9234-e90d98498339
+    m_ActionName: UI/TrackedDeviceOrientation
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: PlayerControls

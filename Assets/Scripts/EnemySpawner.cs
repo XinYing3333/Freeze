@@ -13,12 +13,15 @@ public class EnemySpawner : MonoBehaviour
     public Transform target;
     
     private int _currentWaveIndex = 0;
-    private bool spawningWave = false;
     
     public Text countdownText; 
+    private ButtonFX _buttonFX;
 
     private void Start()
     {
+        GameObject myFX = GameObject.Find("ButtonFX");
+        _buttonFX = myFX.GetComponent<ButtonFX>();
+        
         countdownText.text = "";
         StartCoroutine(SpawnWaves());
     }
@@ -50,8 +53,7 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator SpawnEnemyWave(Wave wave)
     {
-        spawningWave = true;
-
+        _buttonFX.PlayFX("WaveStart");
         foreach (WaveEntry entry in wave.waveEntries)
         {
             for (int i = 0; i < entry.count; i++)
@@ -60,8 +62,6 @@ public class EnemySpawner : MonoBehaviour
                 yield return new WaitForSeconds(wave.spawnInterval);
             }
         }
-
-        spawningWave = false;
     }
 
     void SpawnEnemy(GameObject enemyPrefab)

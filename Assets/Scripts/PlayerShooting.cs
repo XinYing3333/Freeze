@@ -10,7 +10,7 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private Transform bulletSpawnPoint2;
     [SerializeField] private Transform bulletSpawnPoint3;
     [SerializeField] private float bulletSpeed = 20f;
-    [SerializeField] private float bulletInterval = 1f;
+    [SerializeField] private float bulletInterval = 0.6f;
     [SerializeField] public bool startShoot;
     [SerializeField] private bool isShooting;
     
@@ -22,9 +22,14 @@ public class PlayerShooting : MonoBehaviour
     private bool _isShooting;
     public bool isDash;
     private bool _canSwitchWeapon = true;
+    private ButtonFX _buttonFX;
+
 
     void Start()
     {
+        GameObject myFX = GameObject.Find("ButtonFX");
+        _buttonFX = myFX.GetComponent<ButtonFX>();
+        
         _playerInput = GetComponent<PlayerInput>();
         _shootAction = _playerInput.actions["Shoot"];
         _switch = _playerInput.actions["Switch"];
@@ -69,6 +74,9 @@ public class PlayerShooting : MonoBehaviour
             }
 
             isShooting = true;
+
+            _buttonFX.PlayFX(weaponNum == 1 ? "ShootA" : "ShootB");
+            
             yield return new WaitForSeconds(bulletInterval);//射擊間隔
             isShooting = false;
         }
@@ -87,10 +95,11 @@ public class PlayerShooting : MonoBehaviour
 
     private void SwitchWeapon()
     {
+        _buttonFX.PlayFX("GunLoad");
         if (weaponNum == 0)
         {
             weaponNum = 1;
-            bulletInterval = 0.8f;
+            bulletInterval = 0.6f;
         }
         else
         {

@@ -117,14 +117,14 @@ Material:
     - _GlossyReflections: 1
     - _Max: 1.45
     - _Metallic: 0
-    - _Min: -0.67
+    - _Min: -0.75
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Shades: 0.12
+    - _Shades: -0.18
     - _Smoothness: 0.03
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
