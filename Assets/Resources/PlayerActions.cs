@@ -80,6 +80,15 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Control"",
+                    ""type"": ""Button"",
+                    ""id"": ""40e9db2b-eb9d-4a00-a0a5-cfbc23a7c24d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -322,6 +331,28 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4267cc34-9582-45cb-99df-46e43475bc62"",
+                    ""path"": ""<XInputController>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Control"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0941ec6f-b20d-4cfa-a506-a7d3e7a892f3"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Control"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -964,6 +995,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         m_PlayerControls_Look = m_PlayerControls.FindAction("Look", throwIfNotFound: true);
         m_PlayerControls_Shoot = m_PlayerControls.FindAction("Shoot", throwIfNotFound: true);
         m_PlayerControls_Switch = m_PlayerControls.FindAction("Switch", throwIfNotFound: true);
+        m_PlayerControls_Control = m_PlayerControls.FindAction("Control", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1043,6 +1075,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerControls_Look;
     private readonly InputAction m_PlayerControls_Shoot;
     private readonly InputAction m_PlayerControls_Switch;
+    private readonly InputAction m_PlayerControls_Control;
     public struct PlayerControlsActions
     {
         private @PlayerActions m_Wrapper;
@@ -1053,6 +1086,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         public InputAction @Look => m_Wrapper.m_PlayerControls_Look;
         public InputAction @Shoot => m_Wrapper.m_PlayerControls_Shoot;
         public InputAction @Switch => m_Wrapper.m_PlayerControls_Switch;
+        public InputAction @Control => m_Wrapper.m_PlayerControls_Control;
         public InputActionMap Get() { return m_Wrapper.m_PlayerControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1080,6 +1114,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @Switch.started += instance.OnSwitch;
             @Switch.performed += instance.OnSwitch;
             @Switch.canceled += instance.OnSwitch;
+            @Control.started += instance.OnControl;
+            @Control.performed += instance.OnControl;
+            @Control.canceled += instance.OnControl;
         }
 
         private void UnregisterCallbacks(IPlayerControlsActions instance)
@@ -1102,6 +1139,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @Switch.started -= instance.OnSwitch;
             @Switch.performed -= instance.OnSwitch;
             @Switch.canceled -= instance.OnSwitch;
+            @Control.started -= instance.OnControl;
+            @Control.performed -= instance.OnControl;
+            @Control.canceled -= instance.OnControl;
         }
 
         public void RemoveCallbacks(IPlayerControlsActions instance)
@@ -1245,6 +1285,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnSwitch(InputAction.CallbackContext context);
+        void OnControl(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

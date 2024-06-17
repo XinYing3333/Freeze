@@ -16,14 +16,23 @@ public class EnemySpawner : MonoBehaviour
     
     public Text countdownText; 
     private ButtonFX _buttonFX;
+    
+    private GameManager _gameManager; 
+
 
     private void Start()
     {
+        GameObject gm = GameObject.Find("GameManager");
+        _gameManager = gm.GetComponent<GameManager>();
+        
         GameObject myFX = GameObject.Find("ButtonFX");
         _buttonFX = myFX.GetComponent<ButtonFX>();
         
         countdownText.text = "";
-        StartCoroutine(SpawnWaves());
+        if (!_gameManager.isOver)
+        {
+            StartCoroutine(SpawnWaves());
+        }
     }
 
     IEnumerator SpawnWaves()

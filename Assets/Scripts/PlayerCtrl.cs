@@ -11,7 +11,7 @@ public class PlayerCtrl : MonoBehaviour
     [Header("Dash Settings")]
     [SerializeField] float dashForce = 5.0f;
     [SerializeField] float dashTime = 1f;
-    [SerializeField] float dashCooldown = 0.8f;
+    [SerializeField] float dashCooldown = 0.1f;
     
     [Header("Input Settings")]
     public PlayerInput playerInput;
@@ -20,13 +20,14 @@ public class PlayerCtrl : MonoBehaviour
     private InputAction _movement;
     private InputAction _run;
     private InputAction _dash;
+    private InputAction _look;
+    private InputAction _control;
 
     private bool _isMove;
     private bool _isRun;
     private bool _isDashing;
     private float _lastDashTime;
     private Vector3 _rawInputMovement;
-    private InputAction _look;
     private Vector3 _rawInputLook;
 
     private PlayerShooting _playerShooting;
@@ -44,6 +45,9 @@ public class PlayerCtrl : MonoBehaviour
         _movement = playerInput.actions.FindAction("Movement");
         _run = playerInput.actions.FindAction("Run");
         _look = playerInput.actions.FindAction("Look");
+        
+        _control = playerInput.actions.FindAction("Control");
+        _control.performed += ctx => ShowControlMenu();
         
         GameObject myFX = GameObject.Find("ButtonFX");
         _buttonFX = myFX.GetComponent<ButtonFX>();
@@ -122,6 +126,11 @@ public class PlayerCtrl : MonoBehaviour
 
         Quaternion targetRotation = Quaternion.LookRotation(_rawInputMovement, Vector3.up);
         _rb.rotation = Quaternion.Slerp(_rb.rotation, targetRotation, turnSpeed * Time.deltaTime);
+    }
+
+    private void ShowControlMenu()
+    {
+        _gameManager.ControlMenu();
     }
     
     private void Dash()

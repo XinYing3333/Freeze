@@ -5,7 +5,7 @@ using UnityEngine;
 public class WaveItem
 {
     public List<WaveItemEntry> waveEntries;
-    public float spawnInterval = 5f;
+    public float spawnInterval;
 }
 
 [System.Serializable]

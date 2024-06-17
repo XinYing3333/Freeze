@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - IceCreamCar
   - Wall
+  - EventSystem
   layers:
   - Default
   - TransparentFX

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,8 +13,9 @@ public class GameManager : MonoBehaviour
     public Text finalScoreText;
     public Text enemyKillText;
     public Text highestScoreText;
-    
     public bool isOver;
+    
+    private GameObject _controlMenu;
     private GameObject _gameOverMenu;
     private float _highestScore;
 
@@ -23,11 +25,13 @@ public class GameManager : MonoBehaviour
         _gameOverMenu = GameObject.Find("GameOver");
         _gameOverMenu.SetActive(false);
         
+        _controlMenu = GameObject.Find("Control");
+        _controlMenu.SetActive(false);
+        
         GameObject score = GameObject.Find("Score");
         scoreText = score.GetComponent<Text>();
         uiAnim = score.GetComponent<Animator>();
 
-        isOver = false;
         scoreCount = 0f;
         enemyKill = 0;
         
@@ -55,7 +59,8 @@ public class GameManager : MonoBehaviour
             highestScoreText.text = "Highest Score: " + _highestScore.ToString("");
         }
     }
-
+    
+    
     public void EndGame()
     {
         if (isOver)
@@ -77,5 +82,12 @@ public class GameManager : MonoBehaviour
         isOver = false;
         Time.timeScale = 1f;
         SceneManager.LoadScene("Scenes/MainMenu");
+    }
+
+    public void ControlMenu()
+    {
+        var isActive = _controlMenu.activeSelf;
+        _controlMenu.SetActive(!isActive);
+        Time.timeScale = isActive ? 1f : 0f;
     }
 }

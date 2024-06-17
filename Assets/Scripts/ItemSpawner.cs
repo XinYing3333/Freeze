@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ItemSpawner : MonoBehaviour
@@ -12,15 +11,20 @@ public class ItemSpawner : MonoBehaviour
 
     private int _currentWaveIndex;
     private ButtonFX _buttonFX;
-
-    private readonly Dictionary<Transform, GameObject> _spawnedItems = new Dictionary<Transform, GameObject>();
-
+    private GameManager _gameManager;
+    
     private void Start()
     {
+        GameObject gm = GameObject.Find("GameManager");
+        _gameManager = gm.GetComponent<GameManager>();
+        
         GameObject myFX = GameObject.Find("ButtonFX");
         _buttonFX = myFX.GetComponent<ButtonFX>();
-        
-        StartCoroutine(SpawnWaves());
+
+        if (!_gameManager.isOver)
+        {
+            StartCoroutine(SpawnWaves());
+        }
     }
 
     IEnumerator SpawnWaves()
@@ -64,12 +68,6 @@ public class ItemSpawner : MonoBehaviour
         int spawnIndex = Random.Range(0, spawnPoints.Length);
         Transform spawnPoint = spawnPoints[spawnIndex];
 
-        if (_spawnedItems.TryGetValue(spawnPoint, out var spawnedItem))
-        {
-            return;
-        }
-
         GameObject item = Instantiate(itemPrefab, spawnPoint.position, spawnPoint.rotation);
-        _spawnedItems[spawnPoint] = item;
     }
 }
