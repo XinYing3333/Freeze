@@ -9631,11 +9631,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 875790226344447070, guid: f32774044031f5248a06a92a178b9811, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -201
+      value: -189
       objectReference: {fileID: 0}
     - target: {fileID: 875790226344447070, guid: f32774044031f5248a06a92a178b9811, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -218
+      value: -250
       objectReference: {fileID: 0}
     - target: {fileID: 946463766088366764, guid: f32774044031f5248a06a92a178b9811, type: 3}
       propertyPath: m_Camera
@@ -9749,6 +9749,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4384475282292888883, guid: f32774044031f5248a06a92a178b9811, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e5c5527ae173ec04caed2fa6079b35c9, type: 3}
     - target: {fileID: 4433638804957513775, guid: f32774044031f5248a06a92a178b9811, type: 3}
       propertyPath: m_Text
       value: 'Score: 0'
@@ -9775,11 +9779,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4618019064709387244, guid: f32774044031f5248a06a92a178b9811, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 204.99998
+      value: 217.00005
       objectReference: {fileID: 0}
     - target: {fileID: 4618019064709387244, guid: f32774044031f5248a06a92a178b9811, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -217.99998
+      value: -249.99988
       objectReference: {fileID: 0}
     - target: {fileID: 4696532397836299422, guid: f32774044031f5248a06a92a178b9811, type: 3}
       propertyPath: m_Name
@@ -9825,6 +9829,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 223
       objectReference: {fileID: 0}
+    - target: {fileID: 5966605762279222930, guid: f32774044031f5248a06a92a178b9811, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 7e8756423528d3047924a493ceb6d271, type: 3}
     - target: {fileID: 6439467290325974665, guid: f32774044031f5248a06a92a178b9811, type: 3}
       propertyPath: m_Name
       value: sfx
