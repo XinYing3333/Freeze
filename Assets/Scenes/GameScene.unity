@@ -6743,17 +6743,17 @@ MonoBehaviour:
   waves:
   - waveEntries:
     - enemyPrefab: {fileID: 3425803381095750709, guid: a8b73d0750f3e754999aa1d0f2dca96e, type: 3}
-      count: 10
+      count: 15
     spawnInterval: 0.5
   - waveEntries:
     - enemyPrefab: {fileID: 3425803381095750709, guid: a8b73d0750f3e754999aa1d0f2dca96e, type: 3}
-      count: 15
+      count: 18
     - enemyPrefab: {fileID: 3425803381095750709, guid: 6fc94dcb42992974aa7d7308d24d6474, type: 3}
       count: 5
     spawnInterval: 0.25
   - waveEntries:
     - enemyPrefab: {fileID: 3425803381095750709, guid: a8b73d0750f3e754999aa1d0f2dca96e, type: 3}
-      count: 15
+      count: 18
     - enemyPrefab: {fileID: 3425803381095750709, guid: 6fc94dcb42992974aa7d7308d24d6474, type: 3}
       count: 8
     spawnInterval: 0.25
@@ -6817,6 +6817,14 @@ MonoBehaviour:
     - enemyPrefab: {fileID: 3425803381095750709, guid: f77795507e6463c408682457bee4ae6a, type: 3}
       count: 10
     spawnInterval: 0.08
+  - waveEntries:
+    - enemyPrefab: {fileID: 3425803381095750709, guid: a8b73d0750f3e754999aa1d0f2dca96e, type: 3}
+      count: 50
+    - enemyPrefab: {fileID: 3425803381095750709, guid: 6fc94dcb42992974aa7d7308d24d6474, type: 3}
+      count: 50
+    - enemyPrefab: {fileID: 3425803381095750709, guid: f77795507e6463c408682457bee4ae6a, type: 3}
+      count: 15
+    spawnInterval: 0.05
   waveInterval: 30
   target: {fileID: 63536178}
   countdownText: {fileID: 105115500}
