@@ -73,9 +73,18 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Switch"",
+                    ""name"": ""SwitchWeapon"",
                     ""type"": ""Value"",
                     ""id"": ""0ad92fe7-176a-4972-9d48-c52cd9fb7c97"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SwitchBullet"",
+                    ""type"": ""Value"",
+                    ""id"": ""debb5b4b-a75c-4b35-a0e5-46fffe110f87"",
                     ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -214,6 +223,17 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
+                    ""name"": """",
+                    ""id"": ""150aa5c5-5f28-4e23-a2e5-28f53ac7651c"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
                     ""name"": ""Xbox Controller"",
                     ""id"": ""b9dbf6d5-b228-4af7-bc42-f4304af124a6"",
                     ""path"": ""2DVector(mode=2)"",
@@ -297,7 +317,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Switch"",
+                    ""action"": ""SwitchWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -308,7 +328,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Switch"",
+                    ""action"": ""SwitchWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -353,6 +373,28 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Control"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9ddd3a80-1b18-4e86-b54b-ee7e1ab5d5af"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchBullet"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""663fe4f2-26f5-4051-8169-43cf74cf2643"",
+                    ""path"": ""<XInputController>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchBullet"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -994,7 +1036,8 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         m_PlayerControls_Dash = m_PlayerControls.FindAction("Dash", throwIfNotFound: true);
         m_PlayerControls_Look = m_PlayerControls.FindAction("Look", throwIfNotFound: true);
         m_PlayerControls_Shoot = m_PlayerControls.FindAction("Shoot", throwIfNotFound: true);
-        m_PlayerControls_Switch = m_PlayerControls.FindAction("Switch", throwIfNotFound: true);
+        m_PlayerControls_SwitchWeapon = m_PlayerControls.FindAction("SwitchWeapon", throwIfNotFound: true);
+        m_PlayerControls_SwitchBullet = m_PlayerControls.FindAction("SwitchBullet", throwIfNotFound: true);
         m_PlayerControls_Control = m_PlayerControls.FindAction("Control", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
@@ -1074,7 +1117,8 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerControls_Dash;
     private readonly InputAction m_PlayerControls_Look;
     private readonly InputAction m_PlayerControls_Shoot;
-    private readonly InputAction m_PlayerControls_Switch;
+    private readonly InputAction m_PlayerControls_SwitchWeapon;
+    private readonly InputAction m_PlayerControls_SwitchBullet;
     private readonly InputAction m_PlayerControls_Control;
     public struct PlayerControlsActions
     {
@@ -1085,7 +1129,8 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         public InputAction @Dash => m_Wrapper.m_PlayerControls_Dash;
         public InputAction @Look => m_Wrapper.m_PlayerControls_Look;
         public InputAction @Shoot => m_Wrapper.m_PlayerControls_Shoot;
-        public InputAction @Switch => m_Wrapper.m_PlayerControls_Switch;
+        public InputAction @SwitchWeapon => m_Wrapper.m_PlayerControls_SwitchWeapon;
+        public InputAction @SwitchBullet => m_Wrapper.m_PlayerControls_SwitchBullet;
         public InputAction @Control => m_Wrapper.m_PlayerControls_Control;
         public InputActionMap Get() { return m_Wrapper.m_PlayerControls; }
         public void Enable() { Get().Enable(); }
@@ -1111,9 +1156,12 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @Shoot.started += instance.OnShoot;
             @Shoot.performed += instance.OnShoot;
             @Shoot.canceled += instance.OnShoot;
-            @Switch.started += instance.OnSwitch;
-            @Switch.performed += instance.OnSwitch;
-            @Switch.canceled += instance.OnSwitch;
+            @SwitchWeapon.started += instance.OnSwitchWeapon;
+            @SwitchWeapon.performed += instance.OnSwitchWeapon;
+            @SwitchWeapon.canceled += instance.OnSwitchWeapon;
+            @SwitchBullet.started += instance.OnSwitchBullet;
+            @SwitchBullet.performed += instance.OnSwitchBullet;
+            @SwitchBullet.canceled += instance.OnSwitchBullet;
             @Control.started += instance.OnControl;
             @Control.performed += instance.OnControl;
             @Control.canceled += instance.OnControl;
@@ -1136,9 +1184,12 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @Shoot.started -= instance.OnShoot;
             @Shoot.performed -= instance.OnShoot;
             @Shoot.canceled -= instance.OnShoot;
-            @Switch.started -= instance.OnSwitch;
-            @Switch.performed -= instance.OnSwitch;
-            @Switch.canceled -= instance.OnSwitch;
+            @SwitchWeapon.started -= instance.OnSwitchWeapon;
+            @SwitchWeapon.performed -= instance.OnSwitchWeapon;
+            @SwitchWeapon.canceled -= instance.OnSwitchWeapon;
+            @SwitchBullet.started -= instance.OnSwitchBullet;
+            @SwitchBullet.performed -= instance.OnSwitchBullet;
+            @SwitchBullet.canceled -= instance.OnSwitchBullet;
             @Control.started -= instance.OnControl;
             @Control.performed -= instance.OnControl;
             @Control.canceled -= instance.OnControl;
@@ -1284,7 +1335,8 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         void OnDash(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
-        void OnSwitch(InputAction.CallbackContext context);
+        void OnSwitchWeapon(InputAction.CallbackContext context);
+        void OnSwitchBullet(InputAction.CallbackContext context);
         void OnControl(InputAction.CallbackContext context);
     }
     public interface IUIActions

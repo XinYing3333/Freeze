@@ -6,29 +6,63 @@ public class Bullet : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float lifeTime;
 
+    private BulletPool bulletPool;
+    private float timer;
+    
     private PlayerShooting _playerShooting;
     private int _weaponNum;
 
     private Rigidbody rb;
 
+    void OnEnable()
+    {
+        timer = 0;
+    }
+    
     void Start()
     {
         rb = GetComponent<Rigidbody>();
 
         GameObject player = GameObject.FindWithTag("Player");
+        bulletPool = player.GetComponent<BulletPool>();
         _playerShooting = player.GetComponent<PlayerShooting>();
         _weaponNum = _playerShooting.weaponNum;
+        GameObject myBulletPool = GameObject.Find("BulletPool");
+        bulletPool = myBulletPool.GetComponent<BulletPool>();
         
         rb.velocity = transform.forward * speed;
         SwitchWeapon();
-        Destroy(gameObject, lifeTime);
+    }
+    
+    void Update()
+    {
+        timer += Time.deltaTime;
+        if (timer >= lifeTime)
+        {
+            // 到达生存时间，返回池中
+            ReturnToPool();
+        }
     }
     
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy") || other.CompareTag("Wall"))
         {
-            Destroy(gameObject);
+            ReturnToPool();
+        }
+    }
+
+    private void ReturnToPool()
+    {
+        if (bulletPool != null)
+        {
+            bulletPool.ReturnBullet(gameObject);
+            Debug.Log("bullet returned");
+        }
+        else
+        {
+            Destroy(gameObject); // 如果未设置池，仍然销毁
+            Debug.Log("bullet destroy");
         }
     }
     

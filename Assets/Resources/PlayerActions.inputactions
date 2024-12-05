@@ -51,9 +51,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Switch",
+                    "name": "SwitchWeapon",
                     "type": "Value",
                     "id": "0ad92fe7-176a-4972-9d48-c52cd9fb7c97",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "SwitchBullet",
+                    "type": "Value",
+                    "id": "debb5b4b-a75c-4b35-a0e5-46fffe110f87",
                     "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
@@ -192,6 +201,17 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "150aa5c5-5f28-4e23-a2e5-28f53ac7651c",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "Xbox Controller",
                     "id": "b9dbf6d5-b228-4af7-bc42-f4304af124a6",
                     "path": "2DVector(mode=2)",
@@ -275,7 +295,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Switch",
+                    "action": "SwitchWeapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -286,7 +306,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Switch",
+                    "action": "SwitchWeapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -331,6 +351,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Control",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9ddd3a80-1b18-4e86-b54b-ee7e1ab5d5af",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchBullet",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "663fe4f2-26f5-4051-8169-43cf74cf2643",
+                    "path": "<XInputController>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchBullet",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

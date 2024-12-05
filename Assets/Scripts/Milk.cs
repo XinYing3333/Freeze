@@ -1,25 +1,23 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class HealthPotion : MonoBehaviour
+public class Milk : MonoBehaviour
 {
-    public Slider healthBar;
+    [SerializeField] private int milkValue = 3; // 每次增加的资源数量
+
+    
     private Animator _anim;
     private ButtonFX _buttonFX;
 
     void Start()
     {
-        GameObject hp = GameObject.Find("HealthBar");
-        healthBar = hp.GetComponent<Slider>();
         _anim = GetComponent<Animator>();
         
         GameObject myFX = GameObject.Find("ButtonFX");
         _buttonFX = myFX.GetComponent<ButtonFX>();
     }
-    
 
     private void OnTriggerEnter(Collider other)
     {
@@ -33,10 +31,9 @@ public class HealthPotion : MonoBehaviour
     {
         _buttonFX.PlayFX("GetItem");
         _anim.SetBool("isGet",true);
-        if (healthBar.value < 100)
-        {
-            healthBar.value += 10;
-        }
+        
+        ResourceManager.Instance.AddResource(milkValue);
+        
         yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);
     }

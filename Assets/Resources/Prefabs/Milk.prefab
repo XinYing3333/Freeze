@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4935639970300722448}
   - component: {fileID: 579120192550812564}
   m_Layer: 0
-  m_Name: HealthPotion
+  m_Name: Milk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -140,7 +140,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e76e95e8a5d17664a90a57fecb237c8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBar: {fileID: 0}
+  milkCount: {fileID: 0}
+  milk: 0
 --- !u!1 &3059535542477737548
 GameObject:
   m_ObjectHideFlags: 0
@@ -151,7 +152,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8419555200032287451}
   m_Layer: 0
-  m_Name: HealthPotion
+  m_Name: Milk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
