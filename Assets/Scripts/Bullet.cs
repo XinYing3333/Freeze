@@ -5,6 +5,8 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField] private float speed;
     [SerializeField] private float lifeTime;
+    public BulletFlavor bulletFlavor; // 子弹口味
+
 
     private BulletPool bulletPool;
     private float timer;
@@ -56,13 +58,13 @@ public class Bullet : MonoBehaviour
     {
         if (bulletPool != null)
         {
-            bulletPool.ReturnBullet(gameObject);
-            Debug.Log("bullet returned");
+            bulletPool.ReturnBullet(gameObject, bulletFlavor);
+            //Debug.Log("bullet returned");
         }
         else
         {
             Destroy(gameObject); // 如果未设置池，仍然销毁
-            Debug.Log("bullet destroy");
+            //Debug.Log("bullet destroy");
         }
     }
     

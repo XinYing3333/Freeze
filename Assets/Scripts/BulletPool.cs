@@ -3,48 +3,55 @@ using UnityEngine;
 
 public class BulletPool : MonoBehaviour
 {
-    // 子弹预制体
-    [SerializeField] private GameObject bulletPrefab;
-    // 对象池容量
-    [SerializeField] private int poolSize = 40;
+    [SerializeField] private GameObject vanillaBulletPrefab;
+    [SerializeField] private GameObject chocolateBulletPrefab;
+    [SerializeField] private GameObject strawberryBulletPrefab;
+    [SerializeField] private int poolSize = 10;
 
-    // 对象池列表
-    private Queue<GameObject> _bulletPool = new Queue<GameObject>();
+    private Dictionary<BulletFlavor, Queue<GameObject>> _bulletPools;
 
-    void Start()
+    private void Start()
     {
+        _bulletPools = new Dictionary<BulletFlavor, Queue<GameObject>>
+        {
+            { BulletFlavor.Vanilla, InitializePool(vanillaBulletPrefab) },
+            { BulletFlavor.Chocolate, InitializePool(chocolateBulletPrefab) },
+            { BulletFlavor.Strawberry, InitializePool(strawberryBulletPrefab) }
+        };
+    }
+
+    private Queue<GameObject> InitializePool(GameObject prefab)
+    {
+        Queue<GameObject> pool = new Queue<GameObject>();
         for (int i = 0; i < poolSize; i++)
         {
-            GameObject bullet = Instantiate(bulletPrefab);
-            bullet.SetActive(false); // 初始状态设置为非激活
-            _bulletPool.Enqueue(bullet);
+            GameObject bullet = Instantiate(prefab);
+            bullet.SetActive(false);
+            pool.Enqueue(bullet);
         }
+        return pool;
     }
 
-    public GameObject GetBullet(Vector3 position, Quaternion rotation)
+    public GameObject GetBullet(Vector3 position, Quaternion rotation, BulletFlavor flavor)
     {
-        if (_bulletPool.Count > 0)
+        if (_bulletPools.TryGetValue(flavor, out Queue<GameObject> pool) && pool.Count > 0)
         {
-            GameObject bullet = _bulletPool.Dequeue();
+            GameObject bullet = pool.Dequeue();
             bullet.transform.position = position;
             bullet.transform.rotation = rotation;
-            bullet.SetActive(true); // 激活子弹
+            bullet.SetActive(true);
             return bullet;
         }
-        else
-        {
-            return null;
-        }
+
+        return null; // 如果池中没有可用子弹
     }
 
-    public void ReturnBullet(GameObject bullet)
+    public void ReturnBullet(GameObject bullet, BulletFlavor flavor)
     {
-        bullet.SetActive(false); // 归还到对象池时禁用子弹
-
-        // 重置子弹位置和旋转
-        bullet.transform.position = Vector3.zero; // 初始位置为世界坐标原点
-        bullet.transform.rotation = Quaternion.identity; // 初始旋转为无旋转
-
-        _bulletPool.Enqueue(bullet); // 放回队列中
+        bullet.SetActive(false);
+        if (_bulletPools.TryGetValue(flavor, out Queue<GameObject> pool))
+        {
+            pool.Enqueue(bullet);
+        }
     }
 }

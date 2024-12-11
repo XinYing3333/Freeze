@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class PlayerShooting : MonoBehaviour
@@ -16,6 +17,8 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] public bool startShoot;
     [SerializeField] private bool isShooting;
     [SerializeField] private BulletPool bulletPool; // 引用对象池
+    [SerializeField] private Bullet bulletScript;
+
     
     public int weaponNum;
     private BulletFlavor currentFlavor = BulletFlavor.Vanilla;
@@ -37,8 +40,7 @@ public class PlayerShooting : MonoBehaviour
 
     void Start()
     {
-        GameObject myFX = GameObject.Find("ButtonFX");
-        _buttonFX = myFX.GetComponent<ButtonFX>();
+        _buttonFX = GameObject.Find("ButtonFX").GetComponent<ButtonFX>();
         
         _playerInput = GetComponent<PlayerInput>();
         _shootAction = _playerInput.actions["Shoot"];
@@ -47,9 +49,10 @@ public class PlayerShooting : MonoBehaviour
 
         weaponNum = 1;
         
-        GameObject myBulletPool = GameObject.Find("BulletPool");
-        bulletPool = myBulletPool.GetComponent<BulletPool>();
+        _buttonFX = GameObject.FindWithTag("AudioSystem").GetComponent<ButtonFX>();
+        bulletPool = GameObject.FindWithTag("BulletPool").GetComponent<BulletPool>();
 
+        vanillaFlavor.rectTransform.sizeDelta = new Vector2(100, 100);
     }
 
     void Update()
@@ -73,38 +76,42 @@ public class PlayerShooting : MonoBehaviour
         HandleBulletSwitch();
     }
 
-    IEnumerator Shoot()
+    private IEnumerator Shoot()
     {
         if (!isShooting)
         {
-            // 主发射点子弹
-            GameObject bullet1 = bulletPool.GetBullet(bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+            isShooting = true;
+
+            GameObject bullet = bulletPool.GetBullet(bulletSpawnPoint.position, bulletSpawnPoint.rotation, currentFlavor);
             
-            Rigidbody rb1 = bullet1.GetComponent<Rigidbody>();
+            bulletScript = bullet.GetComponent<Bullet>();
+            bulletScript.bulletFlavor = currentFlavor;
+                
+            Rigidbody rb1 = bullet.GetComponent<Rigidbody>();
             rb1.velocity = bulletSpawnPoint.forward * bulletSpeed;
             
-            // 如果是武器 1，额外发射两颗子弹
             if (weaponNum == 1)
             {
-                GameObject bullet2 = bulletPool.GetBullet(bulletSpawnPoint2.position, bulletSpawnPoint2.rotation);
+                //Shoot Point 2
+                GameObject bullet2 = bulletPool.GetBullet(bulletSpawnPoint2.position, bulletSpawnPoint2.rotation, currentFlavor);
                 
                 Rigidbody rb2 = bullet2.GetComponent<Rigidbody>();
                 rb2.velocity = bulletSpawnPoint2.forward * bulletSpeed;
 
-                GameObject bullet3 = bulletPool.GetBullet(bulletSpawnPoint3.position, bulletSpawnPoint3.rotation);
+                //Shoot Point 3
+                GameObject bullet3 = bulletPool.GetBullet(bulletSpawnPoint3.position, bulletSpawnPoint3.rotation, currentFlavor);
                 
                 Rigidbody rb3 = bullet3.GetComponent<Rigidbody>();
                 rb3.velocity = bulletSpawnPoint3.forward * bulletSpeed;
             }
-
-            isShooting = true;
-
+            
             _buttonFX.PlayFX(weaponNum == 1 ? "ShootA" : "ShootB");
-
-            yield return new WaitForSeconds(bulletInterval); // 射击间隔
+            
+            yield return new WaitForSeconds(bulletInterval);
             isShooting = false;
         }
     }
+
 
 
     private void HandleWeaponSwitch()
@@ -154,6 +161,7 @@ public class PlayerShooting : MonoBehaviour
         strawberryFlavor.rectTransform.sizeDelta = new Vector2(50, 50);
         chocolateFlavor.rectTransform.sizeDelta = new Vector2(50, 50);
 
+        //UI Change
         if (currentFlavor == BulletFlavor.Vanilla)
         {
             vanillaFlavor.rectTransform.sizeDelta = new Vector2(100, 100);

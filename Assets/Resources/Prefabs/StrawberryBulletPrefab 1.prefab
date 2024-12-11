@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3112391633175675801}
   - component: {fileID: -9151908412546029820}
   m_Layer: 0
-  m_Name: BulletPrefab
+  m_Name: StrawberryBulletPrefab 1
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 32e73f6a6e423134d8fac040797f13d7, type: 2}
+  - {fileID: 2100000, guid: 1fab8d17e3a357a4ca8e18f4e256aefe, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -100,6 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 20
   lifeTime: 2
+  bulletFlavor: 2
 --- !u!135 &3112391633175675801
 SphereCollider:
   m_ObjectHideFlags: 0
