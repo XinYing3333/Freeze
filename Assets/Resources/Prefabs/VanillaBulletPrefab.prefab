@@ -100,6 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 20
   lifeTime: 2
+  bulletFlavor: 0
 --- !u!135 &3112391633175675801
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -119,7 +120,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1
+  m_Radius: 1.15
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &-9151908412546029820
 Rigidbody:

@@ -69,6 +69,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "OpenStore",
+                    "type": "Value",
+                    "id": "11f6ccae-e849-4fa6-9540-ba18043cd4e0",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Control",
                     "type": "Button",
                     "id": "40e9db2b-eb9d-4a00-a0a5-cfbc23a7c24d",
@@ -302,7 +311,7 @@
                 {
                     "name": "",
                     "id": "f88b5063-e620-4053-97f9-5de9e69894c7",
-                    "path": "<XInputController>/buttonEast",
+                    "path": "<XInputController>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -357,7 +366,7 @@
                 {
                     "name": "",
                     "id": "9ddd3a80-1b18-4e86-b54b-ee7e1ab5d5af",
-                    "path": "<Keyboard>/e",
+                    "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -368,11 +377,33 @@
                 {
                     "name": "",
                     "id": "663fe4f2-26f5-4051-8169-43cf74cf2643",
-                    "path": "<XInputController>/buttonWest",
+                    "path": "<XInputController>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "SwitchBullet",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6191435b-fdd5-4128-8348-3e9b38d79733",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OpenStore",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d8836151-44e5-4246-9005-f7a132bfb386",
+                    "path": "<XInputController>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OpenStore",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

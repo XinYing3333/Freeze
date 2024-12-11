@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 public class Milk : MonoBehaviour
 {
@@ -32,7 +31,7 @@ public class Milk : MonoBehaviour
         _buttonFX.PlayFX("GetItem");
         _anim.SetBool("isGet",true);
         
-        ResourceManager.Instance.AddResource(milkValue);
+        ResourceManager.Instance.AddMilk(milkValue);
         
         yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);

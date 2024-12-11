@@ -120,8 +120,9 @@ public class EnemyCtrl : MonoBehaviour
     {
         if (flavorNeeds.ContainsKey(bulletFlavor))
         {
+            PlayBloodEffect(transform.position);
             flavorNeeds[bulletFlavor]--;
-
+            
             // 更新需求数量显示
             switch (bulletFlavor)
             {
@@ -189,6 +190,17 @@ public class EnemyCtrl : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
         Destroy(gameObject);
+    }
+    
+    // **播放血液特效**
+    private void PlayBloodEffect(Vector3 position)
+    {
+        GameObject bloodEffect = Instantiate(bloodPrefab, position, Quaternion.identity);
+        if (bloodEffect.TryGetComponent(out ParticleSystem ps))
+        {
+            ps.Play();
+            Destroy(bloodEffect, ps.main.duration);
+        }
     }
 
     private void GenerateFlavorNeeds()

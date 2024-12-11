@@ -91,6 +91,15 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""OpenStore"",
+                    ""type"": ""Value"",
+                    ""id"": ""11f6ccae-e849-4fa6-9540-ba18043cd4e0"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""Control"",
                     ""type"": ""Button"",
                     ""id"": ""40e9db2b-eb9d-4a00-a0a5-cfbc23a7c24d"",
@@ -324,7 +333,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""f88b5063-e620-4053-97f9-5de9e69894c7"",
-                    ""path"": ""<XInputController>/buttonEast"",
+                    ""path"": ""<XInputController>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -379,7 +388,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""9ddd3a80-1b18-4e86-b54b-ee7e1ab5d5af"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -390,11 +399,33 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""663fe4f2-26f5-4051-8169-43cf74cf2643"",
-                    ""path"": ""<XInputController>/buttonWest"",
+                    ""path"": ""<XInputController>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""SwitchBullet"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6191435b-fdd5-4128-8348-3e9b38d79733"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenStore"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d8836151-44e5-4246-9005-f7a132bfb386"",
+                    ""path"": ""<XInputController>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenStore"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1038,6 +1069,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         m_PlayerControls_Shoot = m_PlayerControls.FindAction("Shoot", throwIfNotFound: true);
         m_PlayerControls_SwitchWeapon = m_PlayerControls.FindAction("SwitchWeapon", throwIfNotFound: true);
         m_PlayerControls_SwitchBullet = m_PlayerControls.FindAction("SwitchBullet", throwIfNotFound: true);
+        m_PlayerControls_OpenStore = m_PlayerControls.FindAction("OpenStore", throwIfNotFound: true);
         m_PlayerControls_Control = m_PlayerControls.FindAction("Control", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
@@ -1119,6 +1151,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerControls_Shoot;
     private readonly InputAction m_PlayerControls_SwitchWeapon;
     private readonly InputAction m_PlayerControls_SwitchBullet;
+    private readonly InputAction m_PlayerControls_OpenStore;
     private readonly InputAction m_PlayerControls_Control;
     public struct PlayerControlsActions
     {
@@ -1131,6 +1164,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         public InputAction @Shoot => m_Wrapper.m_PlayerControls_Shoot;
         public InputAction @SwitchWeapon => m_Wrapper.m_PlayerControls_SwitchWeapon;
         public InputAction @SwitchBullet => m_Wrapper.m_PlayerControls_SwitchBullet;
+        public InputAction @OpenStore => m_Wrapper.m_PlayerControls_OpenStore;
         public InputAction @Control => m_Wrapper.m_PlayerControls_Control;
         public InputActionMap Get() { return m_Wrapper.m_PlayerControls; }
         public void Enable() { Get().Enable(); }
@@ -1162,6 +1196,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @SwitchBullet.started += instance.OnSwitchBullet;
             @SwitchBullet.performed += instance.OnSwitchBullet;
             @SwitchBullet.canceled += instance.OnSwitchBullet;
+            @OpenStore.started += instance.OnOpenStore;
+            @OpenStore.performed += instance.OnOpenStore;
+            @OpenStore.canceled += instance.OnOpenStore;
             @Control.started += instance.OnControl;
             @Control.performed += instance.OnControl;
             @Control.canceled += instance.OnControl;
@@ -1190,6 +1227,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @SwitchBullet.started -= instance.OnSwitchBullet;
             @SwitchBullet.performed -= instance.OnSwitchBullet;
             @SwitchBullet.canceled -= instance.OnSwitchBullet;
+            @OpenStore.started -= instance.OnOpenStore;
+            @OpenStore.performed -= instance.OnOpenStore;
+            @OpenStore.canceled -= instance.OnOpenStore;
             @Control.started -= instance.OnControl;
             @Control.performed -= instance.OnControl;
             @Control.canceled -= instance.OnControl;
@@ -1337,6 +1377,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         void OnShoot(InputAction.CallbackContext context);
         void OnSwitchWeapon(InputAction.CallbackContext context);
         void OnSwitchBullet(InputAction.CallbackContext context);
+        void OnOpenStore(InputAction.CallbackContext context);
         void OnControl(InputAction.CallbackContext context);
     }
     public interface IUIActions

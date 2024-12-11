@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -18,7 +19,6 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private bool isShooting;
     [SerializeField] private BulletPool bulletPool; // 引用对象池
     [SerializeField] private Bullet bulletScript;
-
     
     public int weaponNum;
     private BulletFlavor currentFlavor = BulletFlavor.Vanilla;
@@ -27,6 +27,8 @@ public class PlayerShooting : MonoBehaviour
     private InputAction _switchWeapon;
     private InputAction _switchBullet;
     private InputAction _shootAction;
+    private InputAction _openStore;
+
     private bool _isShooting;
     public bool isDash;
     private bool _canSwitchWeapon = true;
@@ -36,6 +38,10 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private Image vanillaFlavor;
     [SerializeField] private Image strawberryFlavor;
     [SerializeField] private Image chocolateFlavor;
+    
+    [SerializeField] private ResourceManager resourceManager;
+    [SerializeField] private TruckStore truckStore;
+    [SerializeField] private GameObject autoShootTower;
 
 
     void Start()
@@ -46,6 +52,8 @@ public class PlayerShooting : MonoBehaviour
         _shootAction = _playerInput.actions["Shoot"];
         _switchWeapon = _playerInput.actions["SwitchWeapon"];
         _switchBullet = _playerInput.actions["SwitchBullet"];
+        _openStore = _playerInput.actions["OpenStore"];
+
 
         weaponNum = 1;
         
@@ -53,6 +61,8 @@ public class PlayerShooting : MonoBehaviour
         bulletPool = GameObject.FindWithTag("BulletPool").GetComponent<BulletPool>();
 
         vanillaFlavor.rectTransform.sizeDelta = new Vector2(100, 100);
+
+        resourceManager.AddBullet(50);
     }
 
     void Update()
@@ -74,12 +84,18 @@ public class PlayerShooting : MonoBehaviour
         }
         HandleWeaponSwitch();
         HandleBulletSwitch();
+        OpenStore();
     }
 
     private IEnumerator Shoot()
     {
-        if (!isShooting)
+        if (!isShooting && resourceManager.bulletCount > 0)
         {
+            if (weaponNum == 1 && resourceManager.bulletCount < 3)
+            {
+                yield break;
+            }
+
             isShooting = true;
 
             GameObject bullet = bulletPool.GetBullet(bulletSpawnPoint.position, bulletSpawnPoint.rotation, currentFlavor);
@@ -103,6 +119,12 @@ public class PlayerShooting : MonoBehaviour
                 
                 Rigidbody rb3 = bullet3.GetComponent<Rigidbody>();
                 rb3.velocity = bulletSpawnPoint3.forward * bulletSpeed;
+                
+                resourceManager.ReduceBullets(3);
+            }
+            else
+            {
+                resourceManager.ReduceBullets(1);
             }
             
             _buttonFX.PlayFX(weaponNum == 1 ? "ShootA" : "ShootB");
@@ -111,9 +133,7 @@ public class PlayerShooting : MonoBehaviour
             isShooting = false;
         }
     }
-
-
-
+    
     private void HandleWeaponSwitch()
     {
         float switchWeapon = _switchWeapon.ReadValue<float>();
@@ -155,7 +175,7 @@ public class PlayerShooting : MonoBehaviour
     {
         _buttonFX.PlayFX("ButtonSelect");
         currentFlavor = (BulletFlavor)(((int)currentFlavor + 1) % Enum.GetValues(typeof(BulletFlavor)).Length);
-        Debug.Log($"Bullet Flavor : {currentFlavor}");
+        print($"Bullet Flavor : {currentFlavor}");
 
         vanillaFlavor.rectTransform.sizeDelta = new Vector2(50, 50);
         strawberryFlavor.rectTransform.sizeDelta = new Vector2(50, 50);
@@ -186,6 +206,35 @@ public class PlayerShooting : MonoBehaviour
         if (!_canSwitchBullet)
         {
             _canSwitchBullet = true;
+        }
+    }
+    
+    private void OpenStore()
+    {
+        if (_openStore.WasReleasedThisFrame() && truckStore.isInStorePoint) // ButtonUp
+        {
+            if (truckStore.pointName == "IceCreamCar") // 冰淇淋車（補子彈）
+            {
+                if (resourceManager.milkCount == 3) // 3 Milks = 100 Bullets
+                { 
+                    resourceManager.ReduceMilk(3);
+                    resourceManager.AddBullet(100);
+                }
+                else
+                {
+                    print("Milk is not enough to make ice cream!");
+                }
+                
+                if (resourceManager.milkCount == 6) // 3 Milks = 100 Bullets
+                { 
+                    resourceManager.ReduceMilk(6);
+                    autoShootTower.SetActive(true);
+                }
+                else
+                { 
+                    print("Milk is not enough to active Tower!");
+                }
+            }
         }
     }
 }
