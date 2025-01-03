@@ -8,14 +8,12 @@ public class Milk : MonoBehaviour
 
     
     private Animator _anim;
-    private ButtonFX _buttonFX;
 
     void Start()
     {
         _anim = GetComponent<Animator>();
         
         GameObject myFX = GameObject.Find("ButtonFX");
-        _buttonFX = myFX.GetComponent<ButtonFX>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -28,7 +26,7 @@ public class Milk : MonoBehaviour
 
     IEnumerator GetItem()
     {
-        _buttonFX.PlayFX("GetItem");
+        AudioManager.Instance.PlayFX("GetItem");
         _anim.SetBool("isGet",true);
         
         ResourceManager.Instance.AddMilk(milkValue);

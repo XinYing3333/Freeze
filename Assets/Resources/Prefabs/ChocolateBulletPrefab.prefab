@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3112391633175675801}
   - component: {fileID: -9151908412546029820}
   m_Layer: 0
-  m_Name: ChocolateBulletPrefab 2
+  m_Name: ChocolateBulletPrefab
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

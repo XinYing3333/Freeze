@@ -15,21 +15,12 @@ public class EnemySpawner : MonoBehaviour
     private int _currentWaveIndex = 0;
     
     public Text countdownText; 
-    private ButtonFX _buttonFX;
     
-    private GameManager _gameManager; 
-
 
     private void Start()
     {
-        GameObject gm = GameObject.Find("GameManager");
-        _gameManager = gm.GetComponent<GameManager>();
-        
-        GameObject myFX = GameObject.Find("ButtonFX");
-        _buttonFX = myFX.GetComponent<ButtonFX>();
-        
         countdownText.text = "";
-        if (!_gameManager.isOver)
+        if (!GameManager.Instance.isOver)
         {
             StartCoroutine(SpawnWaves());
         }
@@ -62,7 +53,7 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator SpawnEnemyWave(Wave wave)
     {
-        _buttonFX.PlayFX("WaveStart");
+        AudioManager.Instance.PlayFX("WaveStart");
         foreach (WaveEntry entry in wave.waveEntries)
         {
             for (int i = 0; i < entry.count; i++)

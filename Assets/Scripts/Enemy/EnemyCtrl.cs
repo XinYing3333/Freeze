@@ -35,8 +35,6 @@ public class EnemyCtrl : MonoBehaviour
 
     [Header("Effects")]
     [SerializeField] private GameObject bloodPrefab;
-    private GameManager _gameManager;
-    private ButtonFX _buttonFX;
 
     private static readonly int IsHurt = Animator.StringToHash("isHurt");
     private static readonly int IsAttack = Animator.StringToHash("isAttack");
@@ -47,8 +45,6 @@ public class EnemyCtrl : MonoBehaviour
         // 初始化引用
         target = GameObject.FindWithTag("IceCreamCar").transform;
         healthBar = GameObject.FindWithTag("HealthBar").GetComponent<Slider>();
-        _gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
-        _buttonFX = GameObject.FindWithTag("AudioSystem").GetComponent<ButtonFX>();
 
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _col = GetComponent<CapsuleCollider>();
@@ -80,7 +76,10 @@ public class EnemyCtrl : MonoBehaviour
             if (enemyType.enemyHealth <= 0) StartCoroutine(OnEnemyDeath());
         }
 
-        if (healthBar.value <= 0) _gameManager.isOver = true;
+        if (healthBar.value <= 0)
+        {
+            GameManager.Instance.isOver = true;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -171,12 +170,12 @@ public class EnemyCtrl : MonoBehaviour
 
         // 播放死亡动画和音效
         anim.SetTrigger(IsDeath);
-        _buttonFX.PlayFX("ZombieDead");
+        AudioManager.Instance.PlayFX("ZombieDead");
 
         // 更新游戏状态
-        _gameManager.scoreCount += enemyType.enemyScore;
-        _gameManager.enemyKill++;
-        _gameManager.uiAnim.Play("UI_Anim");
+        GameManager.Instance.scoreCount += enemyType.enemyScore;
+        GameManager.Instance.enemyKill++;
+        GameManager.Instance.uiAnim.Play("UI_Anim");
 
         // 停止导航
         if (_navMeshAgent.isOnNavMesh)

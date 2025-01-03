@@ -10,18 +10,10 @@ public class ItemSpawner : MonoBehaviour
     public int waveInterval; // 每波之间的时间间隔
 
     private int _currentWaveIndex;
-    private ButtonFX _buttonFX;
-    private GameManager _gameManager;
     
     private void Start()
     {
-        GameObject gm = GameObject.Find("GameManager");
-        _gameManager = gm.GetComponent<GameManager>();
-        
-        GameObject myFX = GameObject.Find("ButtonFX");
-        _buttonFX = myFX.GetComponent<ButtonFX>();
-
-        if (!_gameManager.isOver)
+        if (!GameManager.Instance.isOver)
         {
             StartCoroutine(SpawnWaves());
         }
@@ -52,7 +44,7 @@ public class ItemSpawner : MonoBehaviour
 
     IEnumerator SpawnItemWave(WaveItem wave)
     {
-        _buttonFX.PlayFX("WaveStart");
+        AudioManager.Instance.PlayFX("WaveStart");
         foreach (WaveItemEntry entry in wave.waveEntries)
         {
             for (int i = 0; i < entry.count; i++)

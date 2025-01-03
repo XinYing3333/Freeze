@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerCtrl : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
+    [Header("Move Settings")]
     [SerializeField] float movementSpeed = 3.0f;
     [SerializeField] float turnSpeed = 10f;
 
@@ -33,29 +34,24 @@ public class PlayerCtrl : MonoBehaviour
     private PlayerShooting _playerShooting;
     private int _weaponNum;
     
-    private GameManager _gameManager; 
 
-    private ButtonFX _buttonFX;
     private Rigidbody _rb;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        playerInput = GetComponent<PlayerInput>();
-        _movement = playerInput.actions.FindAction("Movement");
-        _run = playerInput.actions.FindAction("Run");
-        _look = playerInput.actions.FindAction("Look");
         
-        _control = playerInput.actions.FindAction("Control");
+        playerInput = GetComponent<PlayerInput>();
+        _movement = playerInput.actions["Movement"];
+        _run = playerInput.actions["Run"];
+        _look = playerInput.actions["Look"];
+        _control = playerInput.actions["Control"];
+        _dash = playerInput.actions["Dash"];
+        
         _control.performed += ctx => ShowControlMenu();
         
-        GameObject myFX = GameObject.Find("ButtonFX");
-        _buttonFX = myFX.GetComponent<ButtonFX>();
-        
         GameObject gm = GameObject.Find("GameManager");
-        _gameManager = gm.GetComponent<GameManager>();
         
-        _dash = playerInput.actions.FindAction("Dash");
         _dash.performed += ctx => Dash();
         
         GameObject player = GameObject.FindWithTag("Player");
@@ -64,7 +60,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void Update()
     {
-        if (!_gameManager.isOver)
+        if (!GameManager.Instance.isOver)
         {
             OnMovement();
             OnLook();
@@ -75,7 +71,7 @@ public class PlayerCtrl : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!_gameManager.isOver)
+        if (!GameManager.Instance.isOver)
         {
             RotateMove();
         }
@@ -130,7 +126,7 @@ public class PlayerCtrl : MonoBehaviour
 
     private void ShowControlMenu()
     {
-        _gameManager.ControlMenu();
+        GameManager.Instance.ControlMenu();
     }
     
     private void Dash()
@@ -145,7 +141,7 @@ public class PlayerCtrl : MonoBehaviour
     {
         _isDashing = true;
         _playerShooting.isDash = true;
-        _buttonFX.PlayFX("Rolling");
+        AudioManager.Instance.PlayFX("Rolling");
         
         Vector3 dashDirection = _rawInputMovement.normalized;
         if (dashDirection == Vector3.zero) // 防止没有移动输入时 Dash

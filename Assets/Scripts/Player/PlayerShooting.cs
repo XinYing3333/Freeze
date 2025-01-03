@@ -33,7 +33,6 @@ public class PlayerShooting : MonoBehaviour
     public bool isDash;
     private bool _canSwitchWeapon = true;
     private bool _canSwitchBullet = true;
-    private ButtonFX _buttonFX;
     
     [SerializeField] private Image vanillaFlavor;
     [SerializeField] private Image strawberryFlavor;
@@ -41,12 +40,11 @@ public class PlayerShooting : MonoBehaviour
     
     [SerializeField] private ResourceManager resourceManager;
     [SerializeField] private TruckStore truckStore;
-    [SerializeField] private GameObject autoShootTower;
+    //[SerializeField] private GameObject autoShootTower;
 
 
     void Start()
     {
-        _buttonFX = GameObject.Find("ButtonFX").GetComponent<ButtonFX>();
         
         _playerInput = GetComponent<PlayerInput>();
         _shootAction = _playerInput.actions["Shoot"];
@@ -57,7 +55,6 @@ public class PlayerShooting : MonoBehaviour
 
         weaponNum = 1;
         
-        _buttonFX = GameObject.FindWithTag("AudioSystem").GetComponent<ButtonFX>();
         bulletPool = GameObject.FindWithTag("BulletPool").GetComponent<BulletPool>();
 
         vanillaFlavor.rectTransform.sizeDelta = new Vector2(100, 100);
@@ -127,7 +124,7 @@ public class PlayerShooting : MonoBehaviour
                 resourceManager.ReduceBullets(1);
             }
             
-            _buttonFX.PlayFX(weaponNum == 1 ? "ShootA" : "ShootB");
+            AudioManager.Instance.PlayFX(weaponNum == 1 ? "ShootA" : "ShootB");
             
             yield return new WaitForSeconds(bulletInterval);
             isShooting = false;
@@ -158,7 +155,7 @@ public class PlayerShooting : MonoBehaviour
 
     private void SwitchWeapon()
     {
-        _buttonFX.PlayFX("GunLoad");
+        AudioManager.Instance.PlayFX("GunLoad");
         if (weaponNum == 0)
         {
             weaponNum = 1;
@@ -173,7 +170,7 @@ public class PlayerShooting : MonoBehaviour
     
     private void SwitchBullet()
     {
-        _buttonFX.PlayFX("ButtonSelect");
+        AudioManager.Instance.PlayFX("ButtonSelect");
         currentFlavor = (BulletFlavor)(((int)currentFlavor + 1) % Enum.GetValues(typeof(BulletFlavor)).Length);
         print($"Bullet Flavor : {currentFlavor}");
 
@@ -215,7 +212,7 @@ public class PlayerShooting : MonoBehaviour
         {
             if (truckStore.pointName == "IceCreamCar") // 冰淇淋車（補子彈）
             {
-                if (resourceManager.milkCount == 3) // 3 Milks = 100 Bullets
+                if (resourceManager.milkCount >= 3) // 3 Milks = 100 Bullets
                 { 
                     resourceManager.ReduceMilk(3);
                     resourceManager.AddBullet(100);
@@ -225,14 +222,14 @@ public class PlayerShooting : MonoBehaviour
                     print("Milk is not enough to make ice cream!");
                 }
                 
-                if (resourceManager.milkCount == 6) // 3 Milks = 100 Bullets
+                //if (resourceManager.milkCount == 6) // 3 Milks = 100 Bullets
                 { 
-                    resourceManager.ReduceMilk(6);
-                    autoShootTower.SetActive(true);
+                    //resourceManager.ReduceMilk(6);
+                    //autoShootTower.SetActive(true);
                 }
-                else
+                //else
                 { 
-                    print("Milk is not enough to active Tower!");
+                    //print("Milk is not enough to active Tower!");
                 }
             }
         }

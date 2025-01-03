@@ -6,7 +6,7 @@ public class BulletPool : MonoBehaviour
     [SerializeField] private GameObject vanillaBulletPrefab;
     [SerializeField] private GameObject chocolateBulletPrefab;
     [SerializeField] private GameObject strawberryBulletPrefab;
-    [SerializeField] private int poolSize = 10;
+    [SerializeField] private int poolSize = 15;
 
     private Dictionary<BulletFlavor, Queue<GameObject>> _bulletPools;
 
@@ -42,7 +42,7 @@ public class BulletPool : MonoBehaviour
             bullet.SetActive(true);
             return bullet;
         }
-
+        
         return null; // 如果池中没有可用子弹
     }
 

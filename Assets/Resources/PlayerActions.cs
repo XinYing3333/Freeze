@@ -107,6 +107,15 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Join"",
+                    ""type"": ""Value"",
+                    ""id"": ""0ce8f585-e8db-42cd-b42a-7f2f7121d94f"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -426,6 +435,28 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""OpenStore"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""464b1684-1a17-4de3-8ca7-9619ccf1a16d"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Join"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e4161c8b-a6d6-4daf-adad-797aa59a4e31"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Join"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1071,6 +1102,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         m_PlayerControls_SwitchBullet = m_PlayerControls.FindAction("SwitchBullet", throwIfNotFound: true);
         m_PlayerControls_OpenStore = m_PlayerControls.FindAction("OpenStore", throwIfNotFound: true);
         m_PlayerControls_Control = m_PlayerControls.FindAction("Control", throwIfNotFound: true);
+        m_PlayerControls_Join = m_PlayerControls.FindAction("Join", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1153,6 +1185,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerControls_SwitchBullet;
     private readonly InputAction m_PlayerControls_OpenStore;
     private readonly InputAction m_PlayerControls_Control;
+    private readonly InputAction m_PlayerControls_Join;
     public struct PlayerControlsActions
     {
         private @PlayerActions m_Wrapper;
@@ -1166,6 +1199,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         public InputAction @SwitchBullet => m_Wrapper.m_PlayerControls_SwitchBullet;
         public InputAction @OpenStore => m_Wrapper.m_PlayerControls_OpenStore;
         public InputAction @Control => m_Wrapper.m_PlayerControls_Control;
+        public InputAction @Join => m_Wrapper.m_PlayerControls_Join;
         public InputActionMap Get() { return m_Wrapper.m_PlayerControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1202,6 +1236,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @Control.started += instance.OnControl;
             @Control.performed += instance.OnControl;
             @Control.canceled += instance.OnControl;
+            @Join.started += instance.OnJoin;
+            @Join.performed += instance.OnJoin;
+            @Join.canceled += instance.OnJoin;
         }
 
         private void UnregisterCallbacks(IPlayerControlsActions instance)
@@ -1233,6 +1270,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @Control.started -= instance.OnControl;
             @Control.performed -= instance.OnControl;
             @Control.canceled -= instance.OnControl;
+            @Join.started -= instance.OnJoin;
+            @Join.performed -= instance.OnJoin;
+            @Join.canceled -= instance.OnJoin;
         }
 
         public void RemoveCallbacks(IPlayerControlsActions instance)
@@ -1379,6 +1419,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         void OnSwitchBullet(InputAction.CallbackContext context);
         void OnOpenStore(InputAction.CallbackContext context);
         void OnControl(InputAction.CallbackContext context);
+        void OnJoin(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
