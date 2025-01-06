@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: InputSystem.inputsettings
   m_EditorClassIdentifier: 
   m_SupportedDevices:
-  - XRController
   - Keyboard
   - Mouse
+  - Joystick
+  - Gamepad
   m_UpdateMode: 1
   m_MaxEventBytesPerUpdate: 5242880
   m_MaxQueuedEventsPerUpdate: 1000

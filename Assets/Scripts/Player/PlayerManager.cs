@@ -16,8 +16,7 @@ public class PlayerManager : MonoBehaviour
     private void OnPlayerJoined(PlayerInput playerInput)
     {
         int playerIndex = playerInput.playerIndex;
-        Debug.Log($"Player {playerIndex} has joined the game!");
-
+        Debug.Log($"Player {playerInput.playerIndex} joined with device: {playerInput.devices[0].displayName}");
         // 可根据 playerIndex 分配自定义角色或行为
         AssignPlayerRole(playerInput, playerIndex);
     }

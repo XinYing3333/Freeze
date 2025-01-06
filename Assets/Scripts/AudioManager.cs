@@ -20,9 +20,9 @@ public class AudioManager : MonoBehaviour
     [Header("Clips")]
     public List<AudioClipInfo> audioClips;
 
-    [Header("FX Slider")]
-    [SerializeField] private Slider bgmSlider;
-    [SerializeField] private Slider soundEffectSlider;
+    //[Header("FX Slider")]
+    //[SerializeField] private Slider bgmSlider;
+    //[SerializeField] private Slider soundEffectSlider;
 
     public static AudioManager Instance { get; private set; }
 
@@ -40,8 +40,6 @@ public class AudioManager : MonoBehaviour
     
     private void Start()
     {
-        GameObject sound = GameObject.Find("myFX");
-        soundEffectSource = sound.GetComponent<AudioSource>();
     }
 
     private void UpdateAudio()
@@ -52,16 +50,16 @@ public class AudioManager : MonoBehaviour
     
     public void SetBGMVolume() //更改背景音樂聲量
     {
-        float bgmVolume = bgmSlider.value;
-        PlayerPrefs.SetFloat("BGMVolume", bgmVolume);
-        PlayerPrefs.Save();
+        //float bgmVolume = bgmSlider.value;
+        //PlayerPrefs.SetFloat("BGMVolume", bgmVolume);
+        //PlayerPrefs.Save();
     }
     
     public void SetSoundEffectVolume() //更新音效聲量
     {
-        float seVolume = soundEffectSlider.value;
-        PlayerPrefs.SetFloat("soundEffectVolume", seVolume);
-        PlayerPrefs.Save();
+        //float seVolume = soundEffectSlider.value;
+        //PlayerPrefs.SetFloat("soundEffectVolume", seVolume);
+        //PlayerPrefs.Save();
     }
 
     public void PlayFX(string fxName)

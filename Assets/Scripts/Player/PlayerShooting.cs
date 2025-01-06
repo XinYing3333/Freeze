@@ -1,27 +1,37 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
+public enum BulletFlavor
+{
+    Vanilla,   
+    Chocolate, 
+    Strawberry  
+}
 public class PlayerShooting : MonoBehaviour
 {
+    [Header("===== GameObjects =====")]
+    [Space(10)]
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform bulletSpawnPoint;
     [SerializeField] private Transform bulletSpawnPoint2;
     [SerializeField] private Transform bulletSpawnPoint3;
+    
+    [HideInInspector] public bool startShoot; //public bool for animator
+    
+    private bool _isShooting;
+    private BulletPool _bulletPool; // 引用对象池
+    private Bullet _bulletScript;
+    
+    [Header("===== Bullet Settings =====")]
+    [Space(10)]
     [SerializeField] private float bulletSpeed = 20f;
     [SerializeField] private float bulletInterval = 0.6f;
-    [SerializeField] public bool startShoot;
-    [SerializeField] private bool isShooting;
-    [SerializeField] private BulletPool bulletPool; // 引用对象池
-    [SerializeField] private Bullet bulletScript;
     
     public int weaponNum;
-    private BulletFlavor currentFlavor = BulletFlavor.Vanilla;
+    private BulletFlavor _currentFlavor = BulletFlavor.Vanilla;
     
     private PlayerInput _playerInput;
     private InputAction _switchWeapon;
@@ -29,37 +39,33 @@ public class PlayerShooting : MonoBehaviour
     private InputAction _shootAction;
     private InputAction _openStore;
 
-    private bool _isShooting;
-    public bool isDash;
+    [HideInInspector] public bool isDash;
     private bool _canSwitchWeapon = true;
     private bool _canSwitchBullet = true;
     
+    [Header("===== Flavor Image Settings =====")]
+    [Space(10)]
     [SerializeField] private Image vanillaFlavor;
     [SerializeField] private Image strawberryFlavor;
     [SerializeField] private Image chocolateFlavor;
     
-    [SerializeField] private ResourceManager resourceManager;
-    [SerializeField] private TruckStore truckStore;
-    //[SerializeField] private GameObject autoShootTower;
-
+    private TruckStore _truckStore;
 
     void Start()
     {
-        
         _playerInput = GetComponent<PlayerInput>();
         _shootAction = _playerInput.actions["Shoot"];
         _switchWeapon = _playerInput.actions["SwitchWeapon"];
         _switchBullet = _playerInput.actions["SwitchBullet"];
         _openStore = _playerInput.actions["OpenStore"];
-
-
+        
         weaponNum = 1;
         
-        bulletPool = GameObject.FindWithTag("BulletPool").GetComponent<BulletPool>();
+        _bulletPool = GameObject.FindWithTag("BulletPool").GetComponent<BulletPool>();
 
         vanillaFlavor.rectTransform.sizeDelta = new Vector2(100, 100);
 
-        resourceManager.AddBullet(50);
+        ResourceManager.Instance.AddBullet(50);
     }
 
     void Update()
@@ -81,24 +87,24 @@ public class PlayerShooting : MonoBehaviour
         }
         HandleWeaponSwitch();
         HandleBulletSwitch();
-        OpenStore();
+        OnOpenStore();
     }
 
     private IEnumerator Shoot()
     {
-        if (!isShooting && resourceManager.bulletCount > 0)
+        if (!_isShooting && ResourceManager.Instance.bulletCount > 0)
         {
-            if (weaponNum == 1 && resourceManager.bulletCount < 3)
+            if (weaponNum == 1 && ResourceManager.Instance.bulletCount < 3)
             {
                 yield break;
             }
 
-            isShooting = true;
+            _isShooting = true;
 
-            GameObject bullet = bulletPool.GetBullet(bulletSpawnPoint.position, bulletSpawnPoint.rotation, currentFlavor);
+            GameObject bullet = _bulletPool.GetBullet(bulletSpawnPoint.position, bulletSpawnPoint.rotation, _currentFlavor);
             
-            bulletScript = bullet.GetComponent<Bullet>();
-            bulletScript.bulletFlavor = currentFlavor;
+            _bulletScript = bullet.GetComponent<Bullet>();
+            _bulletScript.bulletFlavor = _currentFlavor;
                 
             Rigidbody rb1 = bullet.GetComponent<Rigidbody>();
             rb1.velocity = bulletSpawnPoint.forward * bulletSpeed;
@@ -106,28 +112,28 @@ public class PlayerShooting : MonoBehaviour
             if (weaponNum == 1)
             {
                 //Shoot Point 2
-                GameObject bullet2 = bulletPool.GetBullet(bulletSpawnPoint2.position, bulletSpawnPoint2.rotation, currentFlavor);
+                GameObject bullet2 = _bulletPool.GetBullet(bulletSpawnPoint2.position, bulletSpawnPoint2.rotation, _currentFlavor);
                 
                 Rigidbody rb2 = bullet2.GetComponent<Rigidbody>();
                 rb2.velocity = bulletSpawnPoint2.forward * bulletSpeed;
 
                 //Shoot Point 3
-                GameObject bullet3 = bulletPool.GetBullet(bulletSpawnPoint3.position, bulletSpawnPoint3.rotation, currentFlavor);
+                GameObject bullet3 = _bulletPool.GetBullet(bulletSpawnPoint3.position, bulletSpawnPoint3.rotation, _currentFlavor);
                 
                 Rigidbody rb3 = bullet3.GetComponent<Rigidbody>();
                 rb3.velocity = bulletSpawnPoint3.forward * bulletSpeed;
                 
-                resourceManager.ReduceBullets(3);
+                ResourceManager.Instance.ReduceBullets(3);
             }
             else
             {
-                resourceManager.ReduceBullets(1);
+                ResourceManager.Instance.ReduceBullets(1);
             }
             
             AudioManager.Instance.PlayFX(weaponNum == 1 ? "ShootA" : "ShootB");
             
             yield return new WaitForSeconds(bulletInterval);
-            isShooting = false;
+            _isShooting = false;
         }
     }
     
@@ -171,19 +177,19 @@ public class PlayerShooting : MonoBehaviour
     private void SwitchBullet()
     {
         AudioManager.Instance.PlayFX("ButtonSelect");
-        currentFlavor = (BulletFlavor)(((int)currentFlavor + 1) % Enum.GetValues(typeof(BulletFlavor)).Length);
-        print($"Bullet Flavor : {currentFlavor}");
+        _currentFlavor = (BulletFlavor)(((int)_currentFlavor + 1) % Enum.GetValues(typeof(BulletFlavor)).Length);
+        print($"Bullet Flavor : {_currentFlavor}");
 
         vanillaFlavor.rectTransform.sizeDelta = new Vector2(50, 50);
         strawberryFlavor.rectTransform.sizeDelta = new Vector2(50, 50);
         chocolateFlavor.rectTransform.sizeDelta = new Vector2(50, 50);
 
         //UI Change
-        if (currentFlavor == BulletFlavor.Vanilla)
+        if (_currentFlavor == BulletFlavor.Vanilla)
         {
             vanillaFlavor.rectTransform.sizeDelta = new Vector2(100, 100);
         }
-        else if (currentFlavor == BulletFlavor.Strawberry)
+        else if (_currentFlavor == BulletFlavor.Strawberry)
         {
             strawberryFlavor.rectTransform.sizeDelta = new Vector2(100, 100);
         }
@@ -206,40 +212,11 @@ public class PlayerShooting : MonoBehaviour
         }
     }
     
-    private void OpenStore()
+    private void OnOpenStore()
     {
-        if (_openStore.WasReleasedThisFrame() && truckStore.isInStorePoint) // ButtonUp
+        if (_openStore.WasReleasedThisFrame()) // ButtonUp
         {
-            if (truckStore.pointName == "IceCreamCar") // 冰淇淋車（補子彈）
-            {
-                if (resourceManager.milkCount >= 3) // 3 Milks = 100 Bullets
-                { 
-                    resourceManager.ReduceMilk(3);
-                    resourceManager.AddBullet(100);
-                }
-                else
-                {
-                    print("Milk is not enough to make ice cream!");
-                }
-                
-                //if (resourceManager.milkCount == 6) // 3 Milks = 100 Bullets
-                { 
-                    //resourceManager.ReduceMilk(6);
-                    //autoShootTower.SetActive(true);
-                }
-                //else
-                { 
-                    //print("Milk is not enough to active Tower!");
-                }
-            }
+           _truckStore.OpenStore();
         }
     }
 }
-
-public enum BulletFlavor
-{
-    Vanilla,   
-    Chocolate, 
-    Strawberry  
-}
-

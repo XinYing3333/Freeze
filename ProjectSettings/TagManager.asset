@@ -9,12 +9,11 @@ TagManager:
   - IceCreamCar
   - Wall
   - EventSystem
-  - AudioSystem
-  - GameManager
   - HealthBar
   - Milk
   - BulletPool
   - Tower
+  - GameManager
   layers:
   - Default
   - TransparentFX

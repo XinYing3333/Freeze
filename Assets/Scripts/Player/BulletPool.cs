@@ -25,7 +25,7 @@ public class BulletPool : MonoBehaviour
         Queue<GameObject> pool = new Queue<GameObject>();
         for (int i = 0; i < poolSize; i++)
         {
-            GameObject bullet = Instantiate(prefab);
+            GameObject bullet = Instantiate(prefab ,transform);
             bullet.SetActive(false);
             pool.Enqueue(bullet);
         }

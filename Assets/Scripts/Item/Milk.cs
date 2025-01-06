@@ -12,8 +12,6 @@ public class Milk : MonoBehaviour
     void Start()
     {
         _anim = GetComponent<Animator>();
-        
-        GameObject myFX = GameObject.Find("ButtonFX");
     }
 
     private void OnTriggerEnter(Collider other)

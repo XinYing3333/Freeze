@@ -5,19 +5,22 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Move Settings")]
-    [SerializeField] float movementSpeed = 3.0f;
-    [SerializeField] float turnSpeed = 10f;
+    [Header("===== Move Settings =====")]
+    [Space(10)]
+    [SerializeField] private float movementSpeed = 3.0f;
+    [SerializeField] private float turnSpeed = 10f;
 
-    [Header("Dash Settings")]
-    [SerializeField] float dashForce = 5.0f;
-    [SerializeField] float dashTime = 1f;
-    [SerializeField] float dashCooldown = 0.1f;
+    [Header("===== Dash Settings =====")]
+    [Space(10)]
+    [SerializeField] private float dashForce = 5.0f;
+    [SerializeField] private float dashTime = 1f;
+    [SerializeField] private float dashCooldown = 0.1f;
     
-    [Header("Input Settings")]
-    public PlayerInput playerInput;
+    [Header("===== Animator =====")]
+    [Space(10)]
     public Animator anim;
 
+    private PlayerInput _playerInput;
     private InputAction _movement;
     private InputAction _run;
     private InputAction _dash;
@@ -41,21 +44,17 @@ public class PlayerMovement : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         
-        playerInput = GetComponent<PlayerInput>();
-        _movement = playerInput.actions["Movement"];
-        _run = playerInput.actions["Run"];
-        _look = playerInput.actions["Look"];
-        _control = playerInput.actions["Control"];
-        _dash = playerInput.actions["Dash"];
+        _playerInput = GetComponent<PlayerInput>();
+        _movement = _playerInput.actions["Movement"];
+        _run = _playerInput.actions["Run"];
+        _look = _playerInput.actions["Look"];
+        _control = _playerInput.actions["Control"];
+        _dash = _playerInput.actions["Dash"];
         
         _control.performed += ctx => ShowControlMenu();
-        
-        GameObject gm = GameObject.Find("GameManager");
-        
         _dash.performed += ctx => Dash();
         
-        GameObject player = GameObject.FindWithTag("Player");
-        _playerShooting = player.GetComponent<PlayerShooting>();
+        _playerShooting = transform.GetComponent<PlayerShooting>();
     }
 
     void Update()
@@ -111,6 +110,7 @@ public class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
         }
     }
+    
 
     private void RotateMove()
     {
