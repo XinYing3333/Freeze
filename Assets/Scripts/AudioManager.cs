@@ -40,6 +40,7 @@ public class AudioManager : MonoBehaviour
     
     private void Start()
     {
+        
     }
 
     private void UpdateAudio()

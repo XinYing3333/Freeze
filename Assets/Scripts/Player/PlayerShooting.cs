@@ -49,7 +49,7 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] private Image strawberryFlavor;
     [SerializeField] private Image chocolateFlavor;
     
-    private TruckStore _truckStore;
+    private StoreSystem _storeSystem;
 
     void Start()
     {
@@ -62,6 +62,7 @@ public class PlayerShooting : MonoBehaviour
         weaponNum = 1;
         
         _bulletPool = GameObject.FindWithTag("BulletPool").GetComponent<BulletPool>();
+        _storeSystem = FindObjectOfType<StoreSystem>();
 
         vanillaFlavor.rectTransform.sizeDelta = new Vector2(100, 100);
 
@@ -178,7 +179,7 @@ public class PlayerShooting : MonoBehaviour
     {
         AudioManager.Instance.PlayFX("ButtonSelect");
         _currentFlavor = (BulletFlavor)(((int)_currentFlavor + 1) % Enum.GetValues(typeof(BulletFlavor)).Length);
-        print($"Bullet Flavor : {_currentFlavor}");
+        //print($"Bullet Flavor : {_currentFlavor}");
 
         vanillaFlavor.rectTransform.sizeDelta = new Vector2(50, 50);
         strawberryFlavor.rectTransform.sizeDelta = new Vector2(50, 50);
@@ -216,7 +217,7 @@ public class PlayerShooting : MonoBehaviour
     {
         if (_openStore.WasReleasedThisFrame()) // ButtonUp
         {
-           _truckStore.OpenStore();
+           _storeSystem.OpenStore(); //2 player cannot detect====================
         }
     }
 }

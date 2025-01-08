@@ -6,16 +6,17 @@ using UnityEngine.UI;
 
 public class EnemyCtrl : MonoBehaviour
 {
-    [Header("Enemy State")]
+    [Header("===== Enemy State =====")]
+    [Space(10)]
     public EnemyType enemyType;
     private bool _isDead;
     private bool _isAttack;
     private Vector3 _randomTarget;
+    [SerializeField] private GameObject bloodPrefab;
 
-    [Header("Flavor Needs")]
+    [Header("===== Flavor Settings =====")]
+    [Space(10)]
     public Dictionary<BulletFlavor, int> flavorNeeds = new Dictionary<BulletFlavor, int>();
-
-    [Header("Flavor Images")]
     [SerializeField] private Image vanillaImage;
     [SerializeField] private Image chocolateImage;
     [SerializeField] private Image strawberryImage;
@@ -24,17 +25,18 @@ public class EnemyCtrl : MonoBehaviour
     [SerializeField] private Text chocolateText;
     [SerializeField] private Text strawberryText;
 
-    [Header("Target Settings")]
+    [Header("===== Target Settings =====")]
+    [Space(10)]
     [SerializeField] private Transform target;
 
-    [Header("Component References")]
+    [Header("===== Component References =====")]
+    [Space(10)]
     [SerializeField] private Animator anim;
     [SerializeField] private Slider healthBar;
     private NavMeshAgent _navMeshAgent;
     private CapsuleCollider _col;
+    private GameManager _gameManager;
 
-    [Header("Effects")]
-    [SerializeField] private GameObject bloodPrefab;
 
     private static readonly int IsHurt = Animator.StringToHash("isHurt");
     private static readonly int IsAttack = Animator.StringToHash("isAttack");
@@ -45,6 +47,7 @@ public class EnemyCtrl : MonoBehaviour
         // 初始化引用
         target = GameObject.FindWithTag("IceCreamCar").transform;
         healthBar = GameObject.FindWithTag("HealthBar").GetComponent<Slider>();
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _col = GetComponent<CapsuleCollider>();
@@ -78,7 +81,7 @@ public class EnemyCtrl : MonoBehaviour
 
         if (healthBar.value <= 0)
         {
-            GameManager.Instance.isOver = true;
+            _gameManager.isOver = true;
         }
     }
 
@@ -173,9 +176,9 @@ public class EnemyCtrl : MonoBehaviour
         AudioManager.Instance.PlayFX("ZombieDead");
 
         // 更新游戏状态
-        GameManager.Instance.scoreCount += enemyType.enemyScore;
-        GameManager.Instance.enemyKill++;
-        GameManager.Instance.uiAnim.Play("UI_Anim");
+        _gameManager.scoreCount += enemyType.enemyScore;
+        _gameManager.enemyKill++;
+        _gameManager.uiAnim.Play("UI_Anim");
 
         // 停止导航
         if (_navMeshAgent.isOnNavMesh)
@@ -204,13 +207,13 @@ public class EnemyCtrl : MonoBehaviour
 
     private void GenerateFlavorNeeds()
     {
-        int flavorCount = Random.Range(1, 4);
+        int flavorCount = 1; // ===== 口味數量 ======
         foreach (BulletFlavor flavor in (BulletFlavor[])System.Enum.GetValues(typeof(BulletFlavor)))
         {
             if (flavorNeeds.Count >= flavorCount) break;
             if (!flavorNeeds.ContainsKey(flavor))
             {
-                int requiredCount = Random.Range(1, 5);
+                int requiredCount = Random.Range(1, 3); // ===== 需求數量(max-1=實際數字) ======
                 flavorNeeds[flavor] = requiredCount;
 
                 switch (flavor)

@@ -1,91 +1,142 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("UI State")]
+    [Header("===== UI State =====")]
+    [Space(10)]
     public float scoreCount;
     public int enemyKill;
-    public Text scoreText;
     public Animator uiAnim;
-    public Text finalScoreText;
-    public Text enemyKillText;
-    public Text highestScoreText;
-    public bool isOver;
-    
-    private GameObject _controlMenu;
-    private GameObject _gameOverMenu;
-    private float _highestScore;
+    [Space(10)]
+    [SerializeField] private GameObject controlMenu;
+    [SerializeField] private GameObject gameOverMenu;
+    [Space(10)]
+    [SerializeField] private Text scoreText;
+    [SerializeField] private Text finalScoreText;
+    [SerializeField] private Text enemyKillText;
+    [SerializeField] private Text highestScoreText;
+    [SerializeField] private Text timerText;
 
-    public static GameManager Instance { get; private set; }
     
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject); 
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    [Header("===== Timer Settings =====")]
+    [Space(10)]
+    [SerializeField] private float setDefaultTimer = 5f;
+    private float _currentTimer;
+
+    
+    [Header("===== PlayerMode Settings =====")]
+    [Space(10)]
+    [SerializeField] private GameObject player1;
+    [SerializeField] private GameObject player2;
+    
+    [HideInInspector] public bool isOver;
+    private float _highestScore;
+    
     
     private void Start()
     {
-        _gameOverMenu = GameObject.Find("GameOver");
-        _gameOverMenu.SetActive(false);
-        
-        _controlMenu = GameObject.Find("Control");
-        _controlMenu.SetActive(false);
-        
-        GameObject score = GameObject.Find("Score");
-        scoreText = score.GetComponent<Text>();
-        uiAnim = score.GetComponent<Animator>();
-
-        scoreCount = 0f;
-        enemyKill = 0;
-        
-        _highestScore = PlayerPrefs.GetFloat("HighestScore", 0f);
-        highestScoreText.text = "Highest Score: " + _highestScore.ToString("");
+        SetPlayerMode();
+        ResetAllState();
     }
 
     private void Update()
     {
        UpdateScore();
-       EndGame();
+       StartTimer();
+       CheckEndGame();
+    }
+    
+    private void ResetAllState()
+    {
+        GameObject score = GameObject.Find("Score");
+        scoreText = score.GetComponent<Text>();
+        uiAnim = score.GetComponent<Animator>();
+        
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (GameObject player in players)
+        {
+            if (player.name == "Player1Prefab")
+            {
+                player1 = player;
+            }
+            else if (player.name == "Player2Prefab")
+            {
+                player2 = player;
+            }
+        }
+
+        scoreCount = 0f;
+        enemyKill = 0;
+        _currentTimer = setDefaultTimer;
+        
+        _highestScore = PlayerPrefs.GetFloat("HighestCoin", 0f);
+        highestScoreText.text = "Highest Coin: " + _highestScore.ToString("");
     }
 
     private void UpdateScore()
     {
-        scoreText.text = "Score: " + scoreCount.ToString("");
+        scoreText.text = "Coin: " + scoreCount.ToString("");
         finalScoreText.text = scoreText.text;
-        enemyKillText.text = "Enemy Killed: " + enemyKill.ToString("");
+        enemyKillText.text = "FinishedOrders: " + enemyKill.ToString("");
         
         if (scoreCount > _highestScore)
         {
             _highestScore = scoreCount;
-            PlayerPrefs.SetFloat("HighestScore", _highestScore);
+            PlayerPrefs.SetFloat("HighestCoin", _highestScore);
             PlayerPrefs.Save();
-            highestScoreText.text = "Highest Score: " + _highestScore.ToString("");
+            highestScoreText.text = "Highest Coin: " + _highestScore.ToString("");
         }
     }
-    
-    
-    public void EndGame()
+
+    private void StartTimer()
+    {
+        _currentTimer -= Time.deltaTime;
+        timerText.text = "Timer: " + (int)_currentTimer;
+        if (_currentTimer <= 0)
+        {
+            isOver = true;
+        }
+    }
+
+    private void CheckEndGame()
     {
         if (isOver)
         {
-            _gameOverMenu.SetActive(true);
+            gameOverMenu.SetActive(true);
             Time.timeScale = 0f;
         }
     }
 
+    private void SetPlayerMode()
+    {
+        ResetPlayerCount();
+        switch (SceneSwitcher.gameMode)
+        {
+            case 2:
+                player2.SetActive(true);
+                break;
+            //case 3:
+                //player3.SetActive(true);
+                //break;
+        }
+    }
+    
+    private void ResetPlayerCount()
+    {
+        player2.SetActive(false);
+        // If we want to add more player
+        // player3.SetActive(false);
+    }
+
     public void RestartGame()
     {
+        _currentTimer = setDefaultTimer;
+        gameOverMenu.SetActive(false);
         isOver = false;
         Time.timeScale = 1f;
         SceneManager.LoadScene("Scenes/GameScene");
@@ -100,8 +151,8 @@ public class GameManager : MonoBehaviour
 
     public void ControlMenu()
     {
-        var isActive = _controlMenu.activeSelf;
-        _controlMenu.SetActive(!isActive);
+        var isActive = controlMenu.activeSelf;
+        controlMenu.SetActive(!isActive);
         Time.timeScale = isActive ? 1f : 0f;
     }
 }

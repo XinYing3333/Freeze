@@ -37,11 +37,12 @@ public class PlayerMovement : MonoBehaviour
     private PlayerShooting _playerShooting;
     private int _weaponNum;
     
-
+    private GameManager _gameManager;
     private Rigidbody _rb;
 
     void Start()
     {
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _rb = GetComponent<Rigidbody>();
         
         _playerInput = GetComponent<PlayerInput>();
@@ -59,18 +60,22 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (!GameManager.Instance.isOver)
+        if (!_gameManager.isOver)
         {
             OnMovement();
             OnLook();
             SwitchAnim();
+        }
+        else
+        {
+            StopAllCoroutines();
         }
         
     }
 
     void FixedUpdate()
     {
-        if (!GameManager.Instance.isOver)
+        if (!_gameManager.isOver)
         {
             RotateMove();
         }
@@ -126,7 +131,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void ShowControlMenu()
     {
-        GameManager.Instance.ControlMenu();
+        _gameManager.ControlMenu();
     }
     
     private void Dash()

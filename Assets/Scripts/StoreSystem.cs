@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class TruckStore : MonoBehaviour
+public class StoreSystem : MonoBehaviour
 {
     public bool isInStorePoint;
     public string pointName;
-
     
     private void OnTriggerStay(Collider other)
     {

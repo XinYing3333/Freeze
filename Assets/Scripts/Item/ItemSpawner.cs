@@ -5,15 +5,19 @@ using UnityEngine;
 public class ItemSpawner : MonoBehaviour
 {
     [Header("Spawner Settings")]
-    public Transform[] spawnPoints; // 生成位置的数组
-    public List<WaveItem> waves; // 存储波次的列表
-    public int waveInterval; // 每波之间的时间间隔
+    public Vector3 spawnAreaSize = new Vector3(10, 0, 10); // 生成区域的大小
+    public Transform spawnAreaCenter;                      // 生成区域的中心点
+    public List<WaveItem> waves;                           // 存储波次的列表
+    public int waveInterval;                               // 每波之间的时间间隔
 
     private int _currentWaveIndex;
+    private GameManager _gameManager;
     
     private void Start()
     {
-        if (!GameManager.Instance.isOver)
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        if (!_gameManager.isOver)
         {
             StartCoroutine(SpawnWaves());
         }
@@ -57,9 +61,42 @@ public class ItemSpawner : MonoBehaviour
 
     void SpawnItem(GameObject itemPrefab)
     {
-        int spawnIndex = Random.Range(0, spawnPoints.Length);
-        Transform spawnPoint = spawnPoints[spawnIndex];
+        // 在范围内随机生成位置
+        Vector3 randomPosition = GetRandomPositionInArea();
+        Quaternion randomRotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
 
-        GameObject item = Instantiate(itemPrefab, spawnPoint.position, spawnPoint.rotation);
+        GameObject item = Instantiate(itemPrefab, randomPosition, randomRotation);
+    }
+
+    // 获取范围内的随机位置
+    Vector3 GetRandomPositionInArea()
+    {
+        Vector3 halfSize = spawnAreaSize * 0.5f;
+        Vector3 randomPosition = new Vector3(
+            Random.Range(-halfSize.x, halfSize.x),
+            Random.Range(-halfSize.y, halfSize.y),
+            Random.Range(-halfSize.z, halfSize.z)
+        );
+
+        if (spawnAreaCenter != null)
+        {
+            randomPosition += spawnAreaCenter.position;
+        }
+        
+        return randomPosition;
+    }
+
+    // **显示生成区域 Gizmos（新增函数）**
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = new Color(200, 0, 0, 0.3f); // 半透明绿色显示区域
+        if (spawnAreaCenter != null)
+        {
+            Gizmos.DrawCube(spawnAreaCenter.position, spawnAreaSize);
+        }
+        else
+        {
+            Gizmos.DrawCube(transform.position, spawnAreaSize);
+        }
     }
 }

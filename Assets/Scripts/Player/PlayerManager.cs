@@ -3,6 +3,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerManager : MonoBehaviour
 {
+    [SerializeField] private GameObject player1Prefab;
+    [SerializeField] private GameObject player2Prefab;
+
+    
     private void Start()
     {
         PlayerInputManager.instance.onPlayerJoined += OnPlayerJoined;
@@ -17,7 +21,7 @@ public class PlayerManager : MonoBehaviour
     {
         int playerIndex = playerInput.playerIndex;
         Debug.Log($"Player {playerInput.playerIndex} joined with device: {playerInput.devices[0].displayName}");
-        // 可根据 playerIndex 分配自定义角色或行为
+
         AssignPlayerRole(playerInput, playerIndex);
     }
 
@@ -25,10 +29,12 @@ public class PlayerManager : MonoBehaviour
     {
         if (playerIndex == 0)
         {
+            PlayerInputManager.instance.playerPrefab = player1Prefab;
             Debug.Log("Assigning Player 1 role...");
         }
         else if (playerIndex == 1)
         {
+            PlayerInputManager.instance.playerPrefab = player2Prefab;
             Debug.Log("Assigning Player 2 role...");
         }
         else

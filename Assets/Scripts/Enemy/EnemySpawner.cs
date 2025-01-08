@@ -5,22 +5,23 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [Header("Spawner Settings")]
-    public Transform[] spawnPoints; // 敌人生成位置的数组
-    public List<Wave> waves; // 存储波次的列表
+    [Header("===== Spawner Settings =====")]
+    [Space(10)]
+    public Text countdownText; 
     public int waveInterval; // 每波之间的时间间隔
 
-    public Transform target;
+    public Transform[] spawnPoints; // 敌人生成位置的数组
+    public List<Wave> waves; // 存储波次的列表
     
     private int _currentWaveIndex = 0;
-    
-    public Text countdownText; 
-    
+    private GameManager _gameManager;
 
+    
     private void Start()
     {
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         countdownText.text = "";
-        if (!GameManager.Instance.isOver)
+        if (!_gameManager.isOver)
         {
             StartCoroutine(SpawnWaves());
         }
