@@ -14,7 +14,7 @@ public class SceneSwitcher : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-
+    
     public void StartGame()
     {
         SceneManager.LoadScene("Scenes/GameScene");

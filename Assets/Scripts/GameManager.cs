@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -48,6 +50,10 @@ public class GameManager : MonoBehaviour
        UpdateScore();
        StartTimer();
        CheckEndGame();
+       if (Input.GetKeyDown(KeyCode.M))
+       {
+           MainMenu();
+       }
     }
     
     private void ResetAllState()
